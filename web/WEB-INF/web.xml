@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+    <error-page>
+        <location>/404.html</location>
+    </error-page>
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>ligueBaseballServlet.Login</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Routes</servlet-name>
+        <servlet-class>ligueBaseballServlet.Routes</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FormHandler</servlet-name>
+        <servlet-class>ligueBaseballServlet.FormHandler</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>ligueBaseballServlet.Logout</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Routes</servlet-name>
+        <url-pattern>/Routes</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FormHandler</servlet-name>
+        <url-pattern>/FormHandler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+</web-app>

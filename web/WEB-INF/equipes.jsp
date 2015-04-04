@@ -4,7 +4,7 @@
   Date: 2015-04-02
   Time: 6:15 PM
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page  import="java.util.*,java.text.*,ligueBaseball.*" contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
   <title>Équipes - Système de gestion de ligue de Baseball</title>
@@ -30,20 +30,40 @@
       <tr>
         <th>N°</th>
         <th>Équipe</th>
-        <th>Actions</th>
+        <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>1</td>
-        <td>Mets</td>
-        <td>
-          <a class="supprimer_demande" href="javascript:;">
-            <span style=" font-size: 1.3em;" class="glyphicon glyphicon-trash"></span>
-            Supprimer
-          </a>
-        </td>
-      </tr>
+
+      <%
+        GestionLigue gestionLigue = new GestionLigue();
+        List equipes = gestionLigue.getEquipes();
+
+        if ( !equipes.isEmpty() ) {
+
+          ListIterator it = equipes.listIterator();
+          while (it.hasNext())
+          {
+            TupleEquipe tupleEquipe = (TupleEquipe) it.next();
+          %>
+          <tr>
+            <td><%= tupleEquipe.idEquipe %></td>
+            <td><%= tupleEquipe.nomEquipe %></td>
+            <td>
+              <a class="nounderline" href="javascript:;">
+                <span class="glyphicon glyphicon-trash"></span>
+                Supprimer
+              </a>
+            </td>
+          </tr>
+          <%
+            }
+          %>
+      <%
+        }
+      %>
+
+
       </tbody>
     </table>
   </div>
@@ -52,19 +72,17 @@
 
 </div> <!-- /container -->
 
-<script src="resources/js/main.js"></script>
-
 <script>
   $(function () {
-
     $('#listeEquipes').dataTable({
       "oLanguage": {
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
-      "bProcessing": true,
-      "bServerSide": true,
+      "aoColumnDefs": [
+        {"bSortable": false, "aTargets": [2]},
+        {"width": "90px", "aTargets": [2]}
+      ],
       "iDisplayLength": 50,
-      "sAjaxSource": "datatable_load/equipes.datatable.php",
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

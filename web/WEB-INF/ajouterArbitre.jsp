@@ -58,8 +58,6 @@
 
 </div> <!-- /container -->
 
-<script src="resources/js/main.js"></script>
-
 <script>
   $('form').validate({
     highlight: function(element) {

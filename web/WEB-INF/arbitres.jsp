@@ -1,3 +1,8 @@
+<%@ page import="ligueBaseball.GestionLigue" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="ligueBaseball.TupleEquipe" %>
+<%@ page import="ligueBaseball.TupleArbitre" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -25,7 +30,7 @@
 <div class="container">
   <!-- Example row of columns -->
   <div class="row">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeEquipes">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeArbitres">
       <thead>
       <tr>
         <th>N°</th>
@@ -35,17 +40,34 @@
       </tr>
       </thead>
       <tbody>
+      <%
+        GestionLigue gestionLigue = new GestionLigue();
+        List joueurs = gestionLigue.getArbitres();
+
+        if ( !joueurs.isEmpty() ) {
+
+          ListIterator it = joueurs.listIterator();
+          while (it.hasNext())
+          {
+            TupleArbitre tupleArbitre = (TupleArbitre) it.next();
+      %>
       <tr>
-        <td>1</td>
-        <td>Charles</td>
-        <td>Provencher</td>
+        <td><%= tupleArbitre.idArbitre %></td>
+        <td><%= tupleArbitre.prenom %></td>
+        <td><%= tupleArbitre.nom %></td>
         <td>
-          <a class="supprimer_joueur" href="javascript:;">
-            <span style=" font-size: 1.3em;" class="glyphicon glyphicon-trash"></span>
+          <a class="nounderline" href="javascript:;">
+            <span class="glyphicon glyphicon-trash"></span>
             Supprimer
           </a>
         </td>
       </tr>
+      <%
+        }
+      %>
+      <%
+        }
+      %>
       </tbody>
     </table>
   </div>
@@ -54,19 +76,17 @@
 
 </div> <!-- /container -->
 
-<script src="resources/js/main.js"></script>
-
 <script>
   $(function () {
-
-    $('#listeEquipes').dataTable({
+    $('#listeArbitres').dataTable({
       "oLanguage": {
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
-      "bProcessing": true,
-      "bServerSide": true,
+      "aoColumnDefs": [
+        {"bSortable": false, "aTargets": [3]},
+        {"width": "90px", "aTargets": [3]}
+      ],
       "iDisplayLength": 50,
-      "sAjaxSource": "datatable_load/equipes.datatable.php",
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

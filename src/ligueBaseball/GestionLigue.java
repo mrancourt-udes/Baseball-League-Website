@@ -5,21 +5,20 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
-public class InventaireManager {
+public class GestionLigue {
 
 	private Database db;
 	private Connection connexion;
 
-	public InventaireManager() {
+	public GestionLigue() {
 		db = Database.getInstance();
 	}
-	
+
 	/**
 	 * Crée une nouvelle équipe. L’équipe est identifiée de manière unique par 
 	 * son EquipeId.
@@ -41,7 +40,7 @@ public class InventaireManager {
 
 		preparedStatementCheck.setString(1, nomEquipe);
 
-		ResultSet rs = preparedStatementCheck.executeQuery();      
+		ResultSet rs = preparedStatementCheck.executeQuery();
 		rs.next();
 
 		if (rs.getBoolean("equipeExists")) {
@@ -91,7 +90,7 @@ public class InventaireManager {
 		connexion = db.getConnection();
 
 		PreparedStatement preparedStatement = null;
-		String query = 
+		String query =
 				"SELECT EquipeId, EquipeNom "
 						+ "FROM equipe "
 						+ "ORDER BY EquipeNom";
@@ -100,7 +99,7 @@ public class InventaireManager {
 
 		try {
 			preparedStatement = connexion.prepareStatement(query);
-			ResultSet rs = preparedStatement.executeQuery();      
+			ResultSet rs = preparedStatement.executeQuery();
 
 			if (!rs.next()) {
 				System.out.println("Aucune équipe pour l'instant.");
@@ -110,7 +109,7 @@ public class InventaireManager {
 				System.out.printf("----+-----------------------\n");
 
 				do {
-					System.out.printf (printFmt1,rs.getString("EquipeId"), 
+					System.out.printf(printFmt1, rs.getString("EquipeId"),
 							rs.getString("EquipeNom"));
 
 				} while (rs.next());
@@ -124,8 +123,48 @@ public class InventaireManager {
 		}
 	}
 
+	public List<TupleEquipe> getEquipes() throws SQLException {
+
+		connexion = db.getConnection();
+
+		List<TupleEquipe> equipes = new LinkedList<>();
+
+		PreparedStatement preparedStatement = null;
+		String query =
+				"SELECT EquipeId, EquipeNom "
+						+ "FROM equipe "
+						+ "ORDER BY EquipeNom";
+
+		try {
+			preparedStatement = connexion.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				do {
+					TupleEquipe tupleEquipe;
+
+					tupleEquipe = new TupleEquipe(
+							rs.getInt("EquipeId"),
+							rs.getString("EquipeNom")
+					);
+
+					equipes.add(tupleEquipe);
+				} while (rs.next());
+			}
+
+		} catch (SQLException e) {
+			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
+		} finally {
+			// fermeture de la connexion
+			connexion.close();
+		}
+
+		return equipes;
+	}
+
+
 	/**
-	 * Supprimer l’équipe < EquipeNom >. L’équipe ne doit pas avoir de joueurs, 
+	 * Supprimer l’équipe < EquipeNom >. L’équipe ne doit pas avoir de joueurs,
 	 * sinon la transaction est refusée.
 	 * @throws SQLException Exception SQL
 	 */
@@ -140,7 +179,7 @@ public class InventaireManager {
 				+ "WHERE equipeNom LIKE ?) AS \"EquipeNotExists\", "
 				+ "EXISTS (SELECT joueurId FROM equipe e "
 				+ "RIGHT JOIN faitpartie fp ON e.EquipeId = fp.EquipeId "
-				+ "WHERE equipeNom LIKE ?) AS \"JoueursExists\""; 
+				+ "WHERE equipeNom LIKE ?) AS \"JoueursExists\"";
 
 		preparedStatementCheck = connexion.prepareStatement(queryCheck);
 
@@ -158,8 +197,8 @@ public class InventaireManager {
 					+ " Veuillez vous assurer qu'aucun joueur n'en fait partie.\n", equipeNom);
 		} else {
 			// Aucune contraintes, on procede a la suppression
-			PreparedStatement preparedStatementSuppression = null;		
-			String querySupression = "DELETE FROM equipe WHERE equipeNom = ?"; 
+			PreparedStatement preparedStatementSuppression = null;
+			String querySupression = "DELETE FROM equipe WHERE equipeNom = ?";
 
 			try {
 
@@ -174,12 +213,12 @@ public class InventaireManager {
 			} catch (SQLException e) {
 				System.out.println("USERWARNING - Une erreur est survenue durant la supression de l'équipes.");
 				connexion.rollback();
-			} finally { 
+			} finally {
 				connexion.close();
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * <JoueurNom> <JoueurPrenom> [<EquipeNom> <Numero> [<DateDebut>]]
 	 * Créer un nouveau joueur, le programme doit calculer le JoueurId, et 
@@ -195,8 +234,8 @@ public class InventaireManager {
 	 * @param dateDebut Date de début
 	 * @throws SQLException Exception SQL
 	 */
-	public void creerJoueur(String nomJoueur, String prenomJoueur, String equipeNom, 
-			int numero, Date dateDebut) throws SQLException {
+	public void creerJoueur(String nomJoueur, String prenomJoueur, String equipeNom,
+							int numero, Date dateDebut) throws SQLException {
 
 		connexion = db.getConnection();
 
@@ -256,10 +295,10 @@ public class InventaireManager {
 			} finally {
 				// fermeture de la connexion 
 				connexion.close();
-			}	
-		}	
+			}
+		}
 	}
-	
+
 	/**
 	 * Afficher la liste de joueurs. Si le paramètre < EquipeNom > est fourni, 
 	 * le programme affiche seulement les joueurs de l’équipe correspondante. 
@@ -274,7 +313,7 @@ public class InventaireManager {
 
 		String nomEquipe = null;
 		if (EquipeNom.length > 0) {
-			nomEquipe = EquipeNom[0]; 
+			nomEquipe = EquipeNom[0];
 		}
 
 		PreparedStatement preparedStatement = null;
@@ -293,7 +332,7 @@ public class InventaireManager {
 			query += "AND equipeNom = ? ";
 		}
 
-		query += "ORDER BY fp.equipeid, fp.numero "; 
+		query += "ORDER BY fp.equipeid, fp.numero ";
 
 		try {
 			preparedStatement = connexion.prepareStatement(query);
@@ -302,13 +341,13 @@ public class InventaireManager {
 				preparedStatement.setString(1, nomEquipe);
 			}
 
-			ResultSet rs = preparedStatement.executeQuery();    
+			ResultSet rs = preparedStatement.executeQuery();
 
 			String derniereEquipe = null;
 			if (rs.next()) {
 				do {
 					String equipeCourante = rs.getString("EquipeNom");
-					if (!equipeCourante.equals(derniereEquipe)) {	
+					if (!equipeCourante.equals(derniereEquipe)) {
 						System.out.printf("%s - %s\n",
 								rs.getString("EquipeId"), equipeCourante);
 					}
@@ -328,6 +367,73 @@ public class InventaireManager {
 			// fermeture de la connexion 
 			connexion.close();
 		}
+	}
+
+	public List<TupleJoueur> getJoueurs(String ... EquipeNom) throws SQLException {
+
+		connexion = db.getConnection();
+
+		List<TupleJoueur> joueurs = new LinkedList<>();
+
+
+		String nomEquipe = null;
+		if (EquipeNom.length > 0) {
+			nomEquipe = EquipeNom[0];
+		}
+
+		PreparedStatement preparedStatement = null;
+
+		String query = "SELECT "
+				+ "e.equipeid, e.equipeNom, j.joueurId, "
+				+ "j.joueurPrenom, j.joueurNom, "
+				+ "fp.numero, e.equipeNom, "
+				+ "to_char(fp.dateDebut,'YYYY-MM-DD') AS \"DateDebut\", "
+				+ "to_char(fp.dateFin,'YYYY-MM-DD') AS \"DateFin\" "
+				+ "FROM equipe e, joueur j, faitpartie fp "
+				+ "WHERE fp.joueurid = j.joueurid "
+				+ "AND fp.equipeid = e.equipeid ";
+
+		if (nomEquipe != null) {
+			query += "AND equipeNom = ? ";
+		}
+
+		query += "ORDER BY fp.equipeid, fp.numero ";
+
+		try {
+			preparedStatement = connexion.prepareStatement(query);
+
+			if (nomEquipe != null) {
+				preparedStatement.setString(1, nomEquipe);
+			}
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				do {
+
+					TupleJoueur tupleJoueur;
+
+					tupleJoueur = new TupleJoueur(
+							rs.getInt("JoueurId"),
+							rs.getInt("EquipeId"),
+							rs.getString("joueurNom"),
+							rs.getString("joueurPrenom")
+					);
+
+					joueurs.add(tupleJoueur);
+
+				} while (rs.next());
+			}
+
+		} catch (SQLException e) {
+			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
+		} finally {
+			// fermeture de la connexion
+			connexion.close();
+		}
+
+		return joueurs;
+
 	}
 
 	/**
@@ -365,7 +471,7 @@ public class InventaireManager {
 					preparedStatement = connexion.prepareStatement(query);
 					preparedStatement.setString(1, joueurNom);
 					preparedStatement.setString(2, joueurPrenom);
-					preparedStatement.execute();   
+					preparedStatement.execute();
 
 					connexion.commit();
 
@@ -391,7 +497,7 @@ public class InventaireManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param JoueurId
 	 * @return
 	 * @throws SQLException
@@ -430,7 +536,7 @@ public class InventaireManager {
 
 					preparedStatement = connexion.prepareStatement(query);
 					preparedStatement.setInt(1, JoueurId);
-					preparedStatement.execute();   
+					preparedStatement.execute();
 
 					connexion.commit();
 
@@ -440,7 +546,7 @@ public class InventaireManager {
 				} finally {
 					// fermeture de la connexion 
 					connexion.close();
-				}	
+				}
 			} else {
 				succes = false;
 			}
@@ -450,7 +556,7 @@ public class InventaireManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param JoueurId
 	 * @return
 	 * @throws SQLException
@@ -488,7 +594,7 @@ public class InventaireManager {
 
 					preparedStatement = connexion.prepareStatement(query);
 					preparedStatement.setInt(1, JoueurId);
-					preparedStatement.execute();   
+					preparedStatement.execute();
 
 					connexion.commit();
 
@@ -515,8 +621,8 @@ public class InventaireManager {
 	 * l’heure. Le terrain doit être assigné à celui de l’équipe locale.
 	 * @throws SQLException Exception SQL
 	 */
-	public void creerMatch(Date MatchDate, java.util.Date MatchHeure, 
-			String EquipeNomLocal, String EquipeNomVisiteur) throws SQLException {
+	public void creerMatch(Date MatchDate, java.util.Date MatchHeure,
+						   String EquipeNomLocal, String EquipeNomVisiteur) throws SQLException {
 
 		connexion = db.getConnection();
 
@@ -544,15 +650,15 @@ public class InventaireManager {
 				System.out.println("USERWARNING - Veuillez vous assurer que les équipes existent.");
 			}
 		}
-		
+
 		PreparedStatement preparedStatementTerrain = null;
 		preparedStatementTerrain = connexion.prepareStatement("SELECT terrainId FROM equipe WHERE equipenom = ?");
 		preparedStatementTerrain.setString(1, EquipeNomLocal);
 		preparedStatementTerrain.executeQuery();
 		ResultSet rs = preparedStatementTerrain.getResultSet();
-		
+
 		int terrainId = 0;
-		
+
 		if (rs.next()) {
 			terrainId = rs.getInt("terrainId");
 		}
@@ -561,7 +667,7 @@ public class InventaireManager {
 				+ "((SELECT MAX(matchId)+1 FROM match), "
 				+ "(SELECT terrainId FROM equipe WHERE equipenom = ?), ?, ?, "
 				+ "(SELECT equipeId FROM equipe WHERE equipenom = ?), "
-				+ "(SELECT equipeId FROM equipe WHERE equipenom = ?))";		
+				+ "(SELECT equipeId FROM equipe WHERE equipenom = ?))";
 		try {
 			preparedStatement = connexion.prepareStatement(query);
 
@@ -574,9 +680,9 @@ public class InventaireManager {
 			preparedStatement.executeUpdate();
 
 			connexion.commit();
-			
+
 			System.out.println("Le match a été créé avec succès.");
-			
+
 		} catch (SQLException e) {
 			System.out.println(preparedStatement);
 			System.out.println(e);
@@ -609,7 +715,7 @@ public class InventaireManager {
 		preparedStatementCheck.setString(1, ArbitrePrenom);
 		preparedStatementCheck.setString(2, ArbitreNom);
 
-		ResultSet rs = preparedStatementCheck.executeQuery();      
+		ResultSet rs = preparedStatementCheck.executeQuery();
 		rs.next();
 
 		if (rs.getBoolean("arbitreExists")) {
@@ -618,7 +724,7 @@ public class InventaireManager {
 
 			String queryId = "SELECT MAX(arbitreid)+1 AS nextArbitreId FROM arbitre";
 			PreparedStatement preparedStatementId = connexion.prepareStatement(queryId);
-			ResultSet rsId = preparedStatementId.executeQuery();     
+			ResultSet rsId = preparedStatementId.executeQuery();
 			rsId.next();
 			int arbitreId = rsId.getInt("nextArbitreId");
 
@@ -632,7 +738,7 @@ public class InventaireManager {
 				preparedStatement.setInt(1, arbitreId);
 				preparedStatement.setString(2, ArbitrePrenom);
 				preparedStatement.setString(3, ArbitreNom);
-				preparedStatement.executeUpdate();	
+				preparedStatement.executeUpdate();
 
 				connexion.commit();
 
@@ -661,7 +767,7 @@ public class InventaireManager {
 
 		try {
 			PreparedStatement preparedStatement = connexion.prepareStatement(query);
-			ResultSet rs = preparedStatement.executeQuery();      
+			ResultSet rs = preparedStatement.executeQuery();
 
 			if (!rs.next()) {
 				System.out.println("Aucun arbitre l'instant.");
@@ -685,177 +791,215 @@ public class InventaireManager {
 
 	}
 
-	/**
-     * 10.arbitrerMatch <MatchDate> <MatchHeure> <EquipeNomLocal> 
-     * <EquipeNomVisiteur> <ArbitreNom> <ArbitrePrenom>
-     * Affecter des arbitres à un match. Valider que le match existe, ainsi que 
-     * les <ArbitreNom> <ArbitrePrenom>. Un match peut avoir un maximum de 
-     * quatre arbitres, il faut les compter.
-	 * @throws SQLException Exception SQL
-     */
-    public void arbitrerMatch(Date  MatchDate, Timestamp MatchHeure,
-            String EquipeNomLocal, String EquipeNomVisiteur, String ArbitreNom, 
-            String ArbitrePrenom) throws SQLException {
-    	
-        connexion = db.getConnection();
- 
-        String queryCheck = "SELECT "
-                + "EXISTS (SELECT * FROM match JOIN equipe AS equipeL ON equipeL.equipeid = equipeLocal JOIN equipe AS equipeV ON equipeV.equipeid = equipevisiteur "
-                + "WHERE matchDate = ? AND matchHeure = ? AND equipeL.equipeNom = ? AND equipeV.equipenom = ?)"
-                + "AS matchExists";
- 
-        PreparedStatement preparedStatementCheck = connexion.prepareStatement(queryCheck);
-        preparedStatementCheck.setDate(1, MatchDate);
-        preparedStatementCheck.setTimestamp(2, MatchHeure);
-        preparedStatementCheck.setString(3, EquipeNomLocal);
-        preparedStatementCheck.setString(4, EquipeNomVisiteur);
-        
-        ResultSet rs = preparedStatementCheck.executeQuery();      
-        rs.next();
-        
-        if(rs.getBoolean("matchExists")) {
-            String queryCheck1 = "SELECT EXISTS (SELECT * FROM arbitre WHERE arbitrePrenom = ? AND arbitreNom = ?) AS arbitreExists";
- 
-            PreparedStatement preparedStatementCheck1 = connexion.prepareStatement(queryCheck1) ;
-            preparedStatementCheck1.setString(1, ArbitrePrenom);
-            preparedStatementCheck1.setString(2, ArbitreNom);
- 
-            rs = preparedStatementCheck1.executeQuery();      
-            rs.next();
- 
-            if(rs.getBoolean("arbitreExists")){
-                String queryNbArbitres = "SELECT count(matchid) AS nbArbitres FROM arbitrer GROUP BY matchid";
-                PreparedStatement preparedStatementNbArbitres = connexion.prepareStatement(queryNbArbitres);
-                rs = preparedStatementNbArbitres.executeQuery();
-                rs.next();
-                int nbArbitres = rs.getInt("nbArbitres");
- 
-                if(nbArbitres < 4){
- 
-                    String queryArbitre = "SELECT arbitreid FROM arbitre WHERE arbitrePrenom = ? AND arbitreNom = ? ";
-                    String queryMatch = "SELECT matchid FROM match JOIN equipe ON equipeLocal = equipeid "
-                            + "WHERE matchDate = ? AND matchHeure = ? AND equipeNom = ?";
- 
-                    PreparedStatement preparedStatementArbitre = connexion.prepareStatement(queryArbitre);
-                    preparedStatementArbitre.setString(1, ArbitrePrenom);
-                    preparedStatementArbitre.setString(2, ArbitreNom);
- 
-                    PreparedStatement preparedStatementMatch = connexion.prepareStatement(queryMatch);
-                    preparedStatementMatch.setDate(1, MatchDate);
-                    preparedStatementMatch.setTimestamp(2, MatchHeure);
-                    preparedStatementMatch.setString(3, EquipeNomLocal);
- 
-                    rs = preparedStatementArbitre.executeQuery();      
-                    rs.next();
- 
-                    int arbitreid = rs.getInt("arbitreid");
- 
-                    rs = preparedStatementMatch.executeQuery();
-                    rs.next();
- 
-                    int matchid = rs.getInt("matchid");
- 
-                    String query = "INSERT INTO arbitrer "
-                            + "VALUES (?, ?)";
- 
-                    try {
-                        PreparedStatement preparedStatement = connexion.prepareStatement(query);
- 
-                        preparedStatement.setInt(1, arbitreid);
-                        preparedStatement.setInt(2, matchid);
- 
-                        preparedStatement.executeUpdate();
-                        connexion.commit();
- 
-                    } catch (SQLException e) {
-                        System.out.println("USERWARNING - Une erreur est survenue dans l'association d'un arbitre avec un match");
-                        connexion.rollback();
-                    } finally {
-                        // fermeture de la connexion 
-                        connexion.close();
-                    }
-                }
-            }
-            else{
-                System.out.printf("Cet arbitre n'existe pas");
-            }
-        }
-        else{
-            System.out.printf("Ce match n'existe pas");
-        }   
-    }
+	public List<TupleArbitre> getArbitres() throws SQLException{
+		connexion = db.getConnection();
 
-    
-    /**
+		List<TupleArbitre> arbitres = new LinkedList<>();
+
+		String query = "SELECT ArbitreId, ArbitrePrenom, ArbitreNom FROM arbitre ";
+
+		try {
+			PreparedStatement preparedStatement = connexion.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				do {
+
+					TupleArbitre tupleArbitre;
+
+					tupleArbitre = new TupleArbitre(
+							rs.getInt("ArbitreId"),
+							rs.getString("ArbitrePrenom"),
+							rs.getString("ArbitreNom")
+					);
+
+					arbitres.add(tupleArbitre);
+
+				} while (rs.next());
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e);
+			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
+		} finally {
+			// fermeture de la connexion
+			connexion.close();
+		}
+
+		return arbitres;
+	}
+
+	/**
+	 * 10.arbitrerMatch <MatchDate> <MatchHeure> <EquipeNomLocal>
+	 * <EquipeNomVisiteur> <ArbitreNom> <ArbitrePrenom>
+	 * Affecter des arbitres à un match. Valider que le match existe, ainsi que
+	 * les <ArbitreNom> <ArbitrePrenom>. Un match peut avoir un maximum de
+	 * quatre arbitres, il faut les compter.
+	 * @throws SQLException Exception SQL
+	 */
+	public void arbitrerMatch(Date  MatchDate, Timestamp MatchHeure,
+							  String EquipeNomLocal, String EquipeNomVisiteur, String ArbitreNom,
+							  String ArbitrePrenom) throws SQLException {
+
+		connexion = db.getConnection();
+
+		String queryCheck = "SELECT "
+				+ "EXISTS (SELECT * FROM match JOIN equipe AS equipeL ON equipeL.equipeid = equipeLocal JOIN equipe AS equipeV ON equipeV.equipeid = equipevisiteur "
+				+ "WHERE matchDate = ? AND matchHeure = ? AND equipeL.equipeNom = ? AND equipeV.equipenom = ?)"
+				+ "AS matchExists";
+
+		PreparedStatement preparedStatementCheck = connexion.prepareStatement(queryCheck);
+		preparedStatementCheck.setDate(1, MatchDate);
+		preparedStatementCheck.setTimestamp(2, MatchHeure);
+		preparedStatementCheck.setString(3, EquipeNomLocal);
+		preparedStatementCheck.setString(4, EquipeNomVisiteur);
+
+		ResultSet rs = preparedStatementCheck.executeQuery();
+		rs.next();
+
+		if(rs.getBoolean("matchExists")) {
+			String queryCheck1 = "SELECT EXISTS (SELECT * FROM arbitre WHERE arbitrePrenom = ? AND arbitreNom = ?) AS arbitreExists";
+
+			PreparedStatement preparedStatementCheck1 = connexion.prepareStatement(queryCheck1) ;
+			preparedStatementCheck1.setString(1, ArbitrePrenom);
+			preparedStatementCheck1.setString(2, ArbitreNom);
+
+			rs = preparedStatementCheck1.executeQuery();
+			rs.next();
+
+			if(rs.getBoolean("arbitreExists")){
+				String queryNbArbitres = "SELECT count(matchid) AS nbArbitres FROM arbitrer GROUP BY matchid";
+				PreparedStatement preparedStatementNbArbitres = connexion.prepareStatement(queryNbArbitres);
+				rs = preparedStatementNbArbitres.executeQuery();
+				rs.next();
+				int nbArbitres = rs.getInt("nbArbitres");
+
+				if(nbArbitres < 4){
+
+					String queryArbitre = "SELECT arbitreid FROM arbitre WHERE arbitrePrenom = ? AND arbitreNom = ? ";
+					String queryMatch = "SELECT matchid FROM match JOIN equipe ON equipeLocal = equipeid "
+							+ "WHERE matchDate = ? AND matchHeure = ? AND equipeNom = ?";
+
+					PreparedStatement preparedStatementArbitre = connexion.prepareStatement(queryArbitre);
+					preparedStatementArbitre.setString(1, ArbitrePrenom);
+					preparedStatementArbitre.setString(2, ArbitreNom);
+
+					PreparedStatement preparedStatementMatch = connexion.prepareStatement(queryMatch);
+					preparedStatementMatch.setDate(1, MatchDate);
+					preparedStatementMatch.setTimestamp(2, MatchHeure);
+					preparedStatementMatch.setString(3, EquipeNomLocal);
+
+					rs = preparedStatementArbitre.executeQuery();
+					rs.next();
+
+					int arbitreid = rs.getInt("arbitreid");
+
+					rs = preparedStatementMatch.executeQuery();
+					rs.next();
+
+					int matchid = rs.getInt("matchid");
+
+					String query = "INSERT INTO arbitrer "
+							+ "VALUES (?, ?)";
+
+					try {
+						PreparedStatement preparedStatement = connexion.prepareStatement(query);
+
+						preparedStatement.setInt(1, arbitreid);
+						preparedStatement.setInt(2, matchid);
+
+						preparedStatement.executeUpdate();
+						connexion.commit();
+
+					} catch (SQLException e) {
+						System.out.println("USERWARNING - Une erreur est survenue dans l'association d'un arbitre avec un match");
+						connexion.rollback();
+					} finally {
+						// fermeture de la connexion
+						connexion.close();
+					}
+				}
+			}
+			else{
+				System.out.printf("Cet arbitre n'existe pas");
+			}
+		}
+		else{
+			System.out.printf("Ce match n'existe pas");
+		}
+	}
+
+
+	/**
 	 * 11.entrerResultatMatch <MatchDate> <MatchHeure> <EquipeNomLocal> 
 	 * <EquipeNomVisiteur> <PointsLocal> <PointsVisiteur>
 	 * Entrer le résultat d’un match. Valider que la valeur utilisée pour les 
 	 * points soit toujours plus grande ou égale à zéro.
 	 * @throws SQLException Exception SQL
 	 */
-	public void entrerResultatMatch(Date MatchDate, Timestamp MatchHeure, 
-            String EquipeNomLocal, String EquipeNomVisiteur, int pointsLocal, 
-            int PointsVisiteur) throws SQLException {
-  
-        if (pointsLocal < 0 || PointsVisiteur < 0) {
-            System.out.println("USERWARNING -  Les points soit toujours plus grands ou égal à zéro.");
-        } else {
-            connexion = db.getConnection();
-            
-            PreparedStatement preparedStatementCheck = null;
-    		String queryCheck = "SELECT "
-    				+ "EXISTS (SELECT matchId FROM match WHERE EquipeLocal = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?) "
-                        + "AND EquipeVisiteur = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?)  AND matchdate = ? AND MatchHeure = ?) "
-                        + "AS matchIdExists";
-    		
-    		preparedStatementCheck = connexion.prepareStatement(queryCheck);
-    		
-    		 preparedStatementCheck.setString(1, EquipeNomLocal);
-             preparedStatementCheck.setString(2, EquipeNomVisiteur);
-             preparedStatementCheck.setDate(3, MatchDate);
-             preparedStatementCheck.setTimestamp(4, MatchHeure);
-    		
-    		ResultSet rs = preparedStatementCheck.executeQuery();      
-    		rs.next();
-    				
-    		if (rs.getBoolean("matchIdExists")) {
-    			PreparedStatement preparedStatement = null;
-    			 
-	            try {
-	                String query = "UPDATE match "
-	                        + "SET pointslocal = ?, pointsvisiteur = ? "
-	                        + "WHERE matchid = (SELECT matchId FROM match WHERE EquipeLocal = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?) "
-	                        + "AND EquipeVisiteur = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?)  AND matchdate = ? AND MatchHeure = ?) ";
-	 
-	                preparedStatement = connexion.prepareStatement(query);
-	                preparedStatement.setInt(1, pointsLocal);
-	                preparedStatement.setInt(2, PointsVisiteur);
-	                preparedStatement.setString(3, EquipeNomLocal);
-	                preparedStatement.setString(4, EquipeNomVisiteur);
-	                preparedStatement.setDate(5, MatchDate);
-	                preparedStatement.setTimestamp(6, MatchHeure);
-	               
-	 
-	                System.out.println(preparedStatement);
-	 
-	                preparedStatement.executeUpdate();
-	 
-	                connexion.commit();
-	 
-	 
-	            } catch (SQLException e) {
-	                System.out.println("USERWARNING - Une erreur est survenue durant l'ajout des points. \n ");
-	                connexion.rollback();
-	            } finally {
-	                // fermeture de la connexion 
-	                connexion.close();
-	            }
-    		} else {
-		            System.out.printf("USERWARNING - Une erreur est survenue durant l'ajout des points.");
-    		}
-        }
-    }	
-	
+	public void entrerResultatMatch(Date MatchDate, Timestamp MatchHeure,
+									String EquipeNomLocal, String EquipeNomVisiteur, int pointsLocal,
+									int PointsVisiteur) throws SQLException {
+
+		if (pointsLocal < 0 || PointsVisiteur < 0) {
+			System.out.println("USERWARNING -  Les points soit toujours plus grands ou égal à zéro.");
+		} else {
+			connexion = db.getConnection();
+
+			PreparedStatement preparedStatementCheck = null;
+			String queryCheck = "SELECT "
+					+ "EXISTS (SELECT matchId FROM match WHERE EquipeLocal = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?) "
+					+ "AND EquipeVisiteur = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?)  AND matchdate = ? AND MatchHeure = ?) "
+					+ "AS matchIdExists";
+
+			preparedStatementCheck = connexion.prepareStatement(queryCheck);
+
+			preparedStatementCheck.setString(1, EquipeNomLocal);
+			preparedStatementCheck.setString(2, EquipeNomVisiteur);
+			preparedStatementCheck.setDate(3, MatchDate);
+			preparedStatementCheck.setTimestamp(4, MatchHeure);
+
+			ResultSet rs = preparedStatementCheck.executeQuery();
+			rs.next();
+
+			if (rs.getBoolean("matchIdExists")) {
+				PreparedStatement preparedStatement = null;
+
+				try {
+					String query = "UPDATE match "
+							+ "SET pointslocal = ?, pointsvisiteur = ? "
+							+ "WHERE matchid = (SELECT matchId FROM match WHERE EquipeLocal = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?) "
+							+ "AND EquipeVisiteur = (SELECT EquipeId FROM equipe WHERE EquipeNom = ?)  AND matchdate = ? AND MatchHeure = ?) ";
+
+					preparedStatement = connexion.prepareStatement(query);
+					preparedStatement.setInt(1, pointsLocal);
+					preparedStatement.setInt(2, PointsVisiteur);
+					preparedStatement.setString(3, EquipeNomLocal);
+					preparedStatement.setString(4, EquipeNomVisiteur);
+					preparedStatement.setDate(5, MatchDate);
+					preparedStatement.setTimestamp(6, MatchHeure);
+
+
+					System.out.println(preparedStatement);
+
+					preparedStatement.executeUpdate();
+
+					connexion.commit();
+
+
+				} catch (SQLException e) {
+					System.out.println("USERWARNING - Une erreur est survenue durant l'ajout des points. \n ");
+					connexion.rollback();
+				} finally {
+					// fermeture de la connexion
+					connexion.close();
+				}
+			} else {
+				System.out.printf("USERWARNING - Une erreur est survenue durant l'ajout des points.");
+			}
+		}
+	}
+
 
 	/**
 	 * 12. afficherResultatsDate [<APartirDate>]
@@ -891,7 +1035,7 @@ public class InventaireManager {
 			if(aPartirDate != null){
 				preparedStatement.setDate(1, aPartirDate);
 			}
-			ResultSet rs = preparedStatement.executeQuery();      
+			ResultSet rs = preparedStatement.executeQuery();
 
 			System.out.println("Liste des matchs");
 			System.out.println("_______________________________________________________________________________________");
@@ -931,12 +1075,71 @@ public class InventaireManager {
 			// fermeture de la connexion 
 			connexion.close();
 		}
-	}	
+	}
+
+	// TODO : Trouver une façon d'aller chercher les arbitres
+	public List<TupleMatch> getResultatsDate(Date aPartirDate) throws SQLException{
+		connexion = db.getConnection();
+
+		List<TupleMatch> matchs = new LinkedList<TupleMatch>();
+
+		PreparedStatement preparedStatement = null;
+
+		String query = "SELECT m.matchid, b.arbitrePrenom || ' ' || b.arbitreNom AS arbitre, "
+				+ "pointslocal, pointsvisiteur, e1.equipeNom AS equipelocal, e2.equipeNom AS equipeVisiteur "
+				+ "FROM match m "
+				+ "RIGHT JOIN arbitrer a ON a.matchid = m.matchid "
+				+ "LEFT JOIN arbitre b ON a.arbitreid = b.arbitreid "
+				+ "INNER JOIN equipe e1 ON e1.equipeid = m.equipelocal "
+				+ "INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur ";
+		if(aPartirDate != null){
+			query += "WHERE matchdate > ? ";
+		}
+		query += "GROUP BY m.matchid, b.arbitrePrenom, b.arbitreNom, pointslocal, pointsvisiteur, "
+				+ "e1.equipeNom, e2.equipeNom "
+				+ "ORDER BY m.matchid ";
+
+		try {
+
+			preparedStatement = connexion.prepareStatement(query);
+			if(aPartirDate != null){
+				preparedStatement.setDate(1, aPartirDate);
+			}
+			ResultSet rs = preparedStatement.executeQuery();
+
+
+			if (rs.next()) {
+
+				do {
+
+					TupleMatch tupleMatch = new TupleMatch(
+							rs.getInt("matchid"),
+							rs.getString("equipelocal"),
+							rs.getString("equipevisiteur"),
+							(rs.getString("pointslocal") != null ? rs.getString("pointslocal") : "À venir"),
+							(rs.getString("pointsvisiteur") != null ? rs.getString("pointsvisiteur") : "À venir"),
+							rs.getString("arbitre")
+					);
+
+					matchs.add(tupleMatch);
+
+				} while (rs.next());
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
+		} finally {
+			// fermeture de la connexion
+			connexion.close();
+		}
+
+		return matchs;
+	}
 
 	/**
 	 * 13.afficherResultats [<EquipeNom>]
-	 * Afficher les résultats des matchs où l’équipe <EquipeNom> a participé, 
-	 * peu importe si c’était comme local ou comme visiteur. Afficher aussi les 
+	 * Afficher les résultats des matchs où l’équipe <EquipeNom> a participé,
+	 * peu importe si c’était comme local ou comme visiteur. Afficher aussi les
 	 * arbitres, s’ils existent pour le match. Les résultats doivent être triés
 	 * par date.
 	 * @throws SQLException Exception SQL
@@ -960,7 +1163,7 @@ public class InventaireManager {
 			preparedStatement = connexion.prepareStatement(query);
 			preparedStatement.setString(1, EquipeNom);
 
-			ResultSet rs = preparedStatement.executeQuery();      
+			ResultSet rs = preparedStatement.executeQuery();
 
 			System.out.println("____________________________");
 
@@ -1011,7 +1214,7 @@ public class InventaireManager {
 
 		preparedStatementCheck.setString(1, nomTerrain);
 
-		ResultSet rs = preparedStatementCheck.executeQuery();      
+		ResultSet rs = preparedStatementCheck.executeQuery();
 		rs.next();
 
 		if (rs.getBoolean("terrainExists")) {

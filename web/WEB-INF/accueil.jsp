@@ -32,10 +32,10 @@
       <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=ajouterEquipe">Ajouter une équipe</a>
     </p>
     <p class="col-md-4">
-      <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=equipes">Liste des équipes</a>
+      <a class="btn btn-primary btn-lg btn-block" href="Equipes">Liste des équipes</a>
     </p>
     <p class="col-md-4">
-      <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=equipes">Supprimer une équipe</a>
+      <a class="btn btn-primary btn-lg btn-block" href="Equipes">Supprimer une équipe</a>
     </p>
   </div>
 
@@ -47,10 +47,10 @@
       <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=ajouterJoueur">Ajouter un joueur</a>
     </p>
     <p class="col-md-4">
-      <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=joueurs">Liste des joueurs</a>
+      <a class="btn btn-primary btn-lg btn-block" href="Joueurs">Liste des joueurs</a>
     </p>
     <p class="col-md-4">
-      <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=joueurs">Supprimer un joueur</a>
+      <a class="btn btn-primary btn-lg btn-block" href="Joueurs">Supprimer un joueur</a>
     </p>
   </div>
 
@@ -65,7 +65,7 @@
       <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=ajouterResultatMatch">Entrer le résultat d’un match</a>
     </p>
     <p class="col-md-4">
-      <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=matchs">Résultats des matchs</a>
+      <a class="btn btn-primary btn-lg btn-block" href="Matchs">Résultats des matchs</a>
     </p>
   </div>
 
@@ -77,7 +77,7 @@
       <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=ajouterArbitre">Ajouter un arbitre</a>
     </p>
     <p class="col-md-4">
-      <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=arbitres">Liste de arbitres</a>
+      <a class="btn btn-primary btn-lg btn-block" href="Arbitres">Liste de arbitres</a>
     </p>
     <p class="col-md-4">
       <a class="btn btn-primary btn-lg btn-block" href="/Routes?page=affecterArbitres">Affecter des arbitres à un match</a>

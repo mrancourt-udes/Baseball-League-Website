@@ -38,7 +38,7 @@
     <!-- Example row of columns -->
     <div class="col-md-6 col-md-offset-3">
 
-      <form class="form-horizontal" action="index.jsp">
+      <form class="form-horizontal" action="WEB-INF/accueil.jsp">
         <div class="form-group">
           <label for="inputUserId" class="control-label col-xs-3">User Id </label>
           <div class="col-xs-9">

@@ -3,7 +3,6 @@ package ligueBaseball;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,7 +22,7 @@ public class Main {
 	/**
 	 * Nouveaux membres
 	 */
-	public static InventaireManager inventaireManager = new InventaireManager();	
+	public static GestionLigue inventaireManager = new GestionLigue();
 
 	// TODO : supprimmer les membres inutiles
 	private String nomFichier;

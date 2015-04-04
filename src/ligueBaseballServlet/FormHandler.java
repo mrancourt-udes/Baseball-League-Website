@@ -1,7 +1,7 @@
 package ligueBaseballServlet;
 
-import ligueBaseball.InventaireManager;
-import ligueBaseball.LigueBaseballException;
+import ligueBaseball.GestionLigue;
+import ligueBaseball.LigueException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -53,17 +53,17 @@ public class FormHandler extends HttpServlet {
             String terrain;
 
             if (request.getParameter("inputEquipe") == null) {
-                throw new LigueBaseballException("Veuillez entrer un nom d'équipe");
+                throw new LigueException("Veuillez entrer un nom d'équipe");
             } else {
                 equipe = request.getParameter("inputEquipe");
             }
             if (request.getParameter("inputTerrain") == null) {
-                throw new LigueBaseballException("Veuillez choisir un terrain");
+                throw new LigueException("Veuillez choisir un terrain");
             } else {
                 terrain = request.getParameter("inputTerrain");
             }
 
-            InventaireManager inv = new InventaireManager();
+            GestionLigue inv = new GestionLigue();
 
             // TODO : Initialise un inventaireManager
             /*GestionBibliotheque biblio = (GestionBibliotheque) request
@@ -80,7 +80,7 @@ public class FormHandler extends HttpServlet {
             RequestDispatcher dispatcher = request
                     .getRequestDispatcher("/WEB-INF/equipes.jsp");
             dispatcher.forward(request, response);
-        } catch (LigueBaseballException e) {
+        } catch (LigueException e) {
             List listeMessageErreur = new LinkedList();
             listeMessageErreur.add(e.toString());
             request.setAttribute("listeMessageErreur", listeMessageErreur);

@@ -1,3 +1,8 @@
+<%@ page import="ligueBaseball.TupleEquipe" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="java.util.List" %>
+<%@ page import="ligueBaseball.GestionLigue" %>
+<%@ page import="ligueBaseball.TupleJoueur" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -23,50 +28,87 @@
 </div>
 
 <div class="container">
-  <!-- Example row of columns -->
+
+  <%
+
+    // TODO : Rendre l'affichage non O(n^2)
+
+    GestionLigue gestionLigue = new GestionLigue();
+    List equipes = gestionLigue.getEquipes();
+    List joueurs = gestionLigue.getJoueurs();
+
+    if ( !equipes.isEmpty() ) {
+
+      ListIterator it = equipes.listIterator();
+      while (it.hasNext())
+      {
+        TupleEquipe tupleEquipe = (TupleEquipe) it.next();
+  %>
   <div class="row">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeEquipes">
+    <h2><%= tupleEquipe.nomEquipe %></h2>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent listeJoueurs">
       <thead>
       <tr>
         <th>N°</th>
         <th>Prénom</th>
         <th>Nom</th>
-        <th>Actions</th>
+        <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>1</td>
-        <td>Charles</td>
-        <td>Provencher</td>
-        <td>
-          <a class="supprimer_joueur" href="javascript:;">
-            <span style=" font-size: 1.3em;" class="glyphicon glyphicon-trash"></span>
-            Supprimer
-          </a>
-        </td>
-      </tr>
+
+      <%
+        ListIterator itJ = joueurs.listIterator();
+        while (itJ.hasNext()) {
+          TupleJoueur tupleJoueur = (TupleJoueur) itJ.next();
+          if (tupleEquipe.idEquipe == tupleJoueur.idEquipe) {
+          %>
+          <tr>
+            <td><%= tupleJoueur.idJoueur %></td>
+            <td><%= tupleJoueur.nom %></td>
+            <td><%= tupleJoueur.prenom %></td>
+            <td>
+              <a class="nounderline" href="javascript:;">
+                <span class="glyphicon glyphicon-trash"></span>
+                Supprimer
+              </a>
+            </td>
+          </tr>
+          <%
+          }
+        }
+      %>
+
+
       </tbody>
     </table>
   </div>
+  <%
+    }
+  %>
+  <%
+    }
+  %>
+
+
+
 
   <jsp:include page="/WEB-INF/includes/footer.inc.jsp" />
 
 </div> <!-- /container -->
 
-<script src="resources/js/main.js"></script>
-
 <script>
   $(function () {
 
-    $('#listeEquipes').dataTable({
+    $('.listeJoueurs').dataTable({
       "oLanguage": {
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
-      "bProcessing": true,
-      "bServerSide": true,
-      "iDisplayLength": 50,
-      "sAjaxSource": "datatable_load/equipes.datatable.php",
+      "aoColumnDefs": [
+        {"bSortable": false, "aTargets": [3]},
+        {"width": "90px", "aTargets": [3]}
+      ],
+      "iDisplayLength": 10,
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

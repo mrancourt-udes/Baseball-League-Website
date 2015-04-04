@@ -1,3 +1,7 @@
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="ligueBaseball.TupleMatch" %>
+<%@ page import="java.util.List" %>
+<%@ page import="ligueBaseball.GestionLigue" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -15,37 +19,55 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
   <div class="container">
-    <h1>Gestion des arbitres</h1>
+    <h1>Gestion des matchs</h1>
     <p>Gérez votre ligue de baseball efficacement.</p>
-    <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterEquipe" role="button">Ajouter un arbitre &raquo;</a></p>
+    <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterEquipe" role="button">Ajouter un match &raquo;</a></p>
 
   </div>
 </div>
 
 <div class="container">
+
   <!-- Example row of columns -->
   <div class="row">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeEquipes">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeMatchs">
       <thead>
       <tr>
         <th>N°</th>
-        <th>Prénom</th>
-        <th>Nom</th>
-        <th>Actions</th>
+        <th>Local</th>
+        <th>visiteur</th>
+        <th>Points Local</th>
+        <th>Points Visiteur</th>
       </tr>
       </thead>
       <tbody>
+
+
+      <%
+        GestionLigue gestionLigue = new GestionLigue();
+        List matchs = gestionLigue.getResultatsDate(null);
+
+        if ( !matchs.isEmpty() ) {
+
+          ListIterator it = matchs.listIterator();
+          while (it.hasNext())
+          {
+            TupleMatch tupleMatch = (TupleMatch) it.next();
+      %>
       <tr>
-        <td>1</td>
-        <td>Charles</td>
-        <td>Provencher</td>
-        <td>
-          <a class="supprimer_joueur" href="javascript:;">
-            <span style=" font-size: 1.3em;" class="glyphicon glyphicon-trash"></span>
-            Supprimer
-          </a>
-        </td>
+        <td><%= tupleMatch.idMatch %></td>
+        <td><%= tupleMatch.equipeLocal %></td>
+        <td><%= tupleMatch.equipeVisiteur %></td>
+        <td><%= tupleMatch.pointsLocal %></td>
+        <td><%= tupleMatch.pointsVisiteur %></td>
       </tr>
+      <%
+        }
+      %>
+      <%
+        }
+      %>
+
       </tbody>
     </table>
   </div>
@@ -54,19 +76,14 @@
 
 </div> <!-- /container -->
 
-<script src="resources/js/main.js"></script>
-
 <script>
   $(function () {
 
-    $('#listeEquipes').dataTable({
+    $('#listeMatchs').dataTable({
       "oLanguage": {
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
-      "bProcessing": true,
-      "bServerSide": true,
       "iDisplayLength": 50,
-      "sAjaxSource": "datatable_load/equipes.datatable.php",
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

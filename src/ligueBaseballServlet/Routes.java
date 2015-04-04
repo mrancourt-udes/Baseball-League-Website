@@ -12,15 +12,13 @@ import java.io.IOException;
  */
 public class Routes extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
-
+        doGet(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = request.getParameter("page");
 
-        RequestDispatcher dispatcher = null;
+        RequestDispatcher dispatcher;
 
         dispatcher = request.getRequestDispatcher("/WEB-INF/"+page+".jsp");
 

@@ -9,6 +9,7 @@
 <link href="/resources/css/dataTables.bootstrap.css" rel="stylesheet">
 <link href="/resources/css/date_time_picker.css" rel="stylesheet">
 <link href="/resources/css/bootstrap-timepicker.min.css" rel="stylesheet">
+<link href="/resources/css/toastr.min.css" rel="stylesheet">
 <link href="/resources/css/styles.css" rel="stylesheet">
 <script type="text/javascript" src="resources/js/jquery.min.js"></script>
 <script type="text/javascript" src="resources/js/bootstrap-3.2.0.min.js"></script>
@@ -20,3 +21,4 @@
 <script type="text/javascript" src="resources/js/datepicker.js"></script>
 <script type="text/javascript" src="resources/js/bootstrap-timepicker.min.js"></script>
 <script type="text/javascript" src="resources/js/knockout-3.3.0.js"></script>
+<script type="text/javascript" src="resources/js/toastr.min.js"></script>

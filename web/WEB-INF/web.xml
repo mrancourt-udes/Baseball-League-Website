@@ -41,6 +41,10 @@
         <servlet-name>Logout</servlet-name>
         <servlet-class>ligueBaseballServlet.Logout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Suppression</servlet-name>
+        <servlet-class>ligueBaseballServlet.Suppression</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Routes</servlet-name>
         <url-pattern>/Routes</url-pattern>
@@ -72,6 +76,10 @@
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Suppression</servlet-name>
+        <url-pattern>/Suppression</url-pattern>
     </servlet-mapping>
     <error-page>
         <error-code>404</error-code>

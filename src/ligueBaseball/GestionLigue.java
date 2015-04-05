@@ -167,47 +167,48 @@ public class GestionLigue {
 	 * sinon la transaction est refusée.
 	 * @throws SQLException Exception SQL
 	 */
-	public void supprimerEquipe(String equipeNom) throws SQLException {
+	public boolean supprimerEquipe(Integer equipeId) throws SQLException, LigueException {
 
 		connexion = db.getConnection();
+		boolean success = false;
 
 		PreparedStatement preparedStatementCheck = null;
 
 		String queryCheck = "SELECT "
-				+ "NOT EXISTS (SELECT equipeId FROM equipe "
-				+ "WHERE equipeNom LIKE ?) AS \"EquipeNotExists\", "
-				+ "EXISTS (SELECT joueurId FROM equipe e "
-				+ "RIGHT JOIN faitpartie fp ON e.EquipeId = fp.EquipeId "
-				+ "WHERE equipeNom LIKE ?) AS \"JoueursExists\"";
+				+ "NOT EXISTS (SELECT equipeId FROM equipe e "
+				+ "WHERE equipeid = ?) AS \"EquipeNotExists\", "
+				+ "EXISTS (SELECT joueurId FROM equipe e1 "
+				+ "RIGHT JOIN faitpartie fp ON e1.EquipeId = fp.EquipeId "
+				+ "WHERE e1.equipeid = ?) AS \"JoueursExists\"";
 
 		preparedStatementCheck = connexion.prepareStatement(queryCheck);
 
-		preparedStatementCheck.setString(1, equipeNom);
-		preparedStatementCheck.setString(2, equipeNom);
+		preparedStatementCheck.setInt(1, equipeId);
+		preparedStatementCheck.setInt(2, equipeId);
 
 		ResultSet rs = preparedStatementCheck.executeQuery();
 		rs.next();
 
 		if (rs.getBoolean("EquipeNotExists")) {
-			System.out.printf("USERERROR - Aucune équipe sous le nom de «%s»\n", equipeNom);
+			throw new LigueException("Cette équipe ne semble pas faire partie de la ligue.");
 		} else if (rs.getBoolean("JoueursExists")) {
 			// Des joueurs font partie de l'equipe
-			System.out.printf("USERERROR - Impossible de supprimer l'équipe «%s»."
-					+ " Veuillez vous assurer qu'aucun joueur n'en fait partie.\n", equipeNom);
+			throw new LigueException("Impossible de supprimer l'équipe. <br> " +
+					" Veuillez vous assurer qu'aucun joueur n'en fait partie.");
 		} else {
 			// Aucune contraintes, on procede a la suppression
 			PreparedStatement preparedStatementSuppression = null;
-			String querySupression = "DELETE FROM equipe WHERE equipeNom = ?";
+			String querySupression = "DELETE FROM equipe WHERE equipeid = ?";
 
 			try {
 
 				preparedStatementSuppression = connexion.prepareStatement(querySupression);
-				preparedStatementSuppression.setString(1, equipeNom);
+				preparedStatementSuppression.setInt(1, equipeId);
 				preparedStatementSuppression.executeUpdate();
 
 				connexion.commit();
 
-				System.out.printf("L'équipe «%s» a été supprimée avec succès.", equipeNom);
+				success = true;
 
 			} catch (SQLException e) {
 				System.out.println("USERWARNING - Une erreur est survenue durant la supression de l'équipes.");
@@ -216,7 +217,12 @@ public class GestionLigue {
 				connexion.close();
 			}
 		}
+
+		return success;
+
 	}
+
+
 
 	/**
 	 * <JoueurNom> <JoueurPrenom> [<EquipeNom> <Numero> [<DateDebut>]]
@@ -441,7 +447,7 @@ public class GestionLigue {
 	 * @param joueurPrenom Prénom du joueur
 	 * @throws SQLException Exception SQL
 	 */
-	public void supprimerJoueur(String joueurNom, String joueurPrenom) throws SQLException {
+	/*public void supprimerJoueur(String joueurNom, String joueurPrenom) throws SQLException {
 
 		connexion = db.getConnection();
 
@@ -493,7 +499,75 @@ public class GestionLigue {
 			System.out.println("USERWARNING - Le joueur à supprimer n'existe pas.");
 		}
 
+	}*/
+
+	/**
+	 * Supprime le joueur et toute l’information stockée sur lui
+	 * @param joueurId Nom du joueur
+	 * @param supprimerJoueurParticipe Supprimer les commentaires du joueur
+	 * @param supprimerJoueurFaitPartie Supprimer les liens du joueur
+	 * @throws SQLException Exception SQL
+	 */
+	public boolean supprimerJoueur(Integer joueurId,
+								   Boolean supprimerJoueurParticipe,
+								   Boolean supprimerJoueurFaitPartie)
+			throws SQLException, LigueException {
+
+		connexion = db.getConnection();
+		boolean success = false;
+
+		String queryCheck = "SELECT JoueurId FROM joueur "
+				+ "WHERE JoueurId = ?";
+
+		PreparedStatement preparedStatementCheck = connexion.prepareStatement(queryCheck);
+		preparedStatementCheck.setInt(1, joueurId);
+
+		ResultSet rs = preparedStatementCheck.executeQuery();
+
+		// Le joueur existe
+		if (rs.next()) {
+
+			// Supression des équipes dans lesquel le joueur fait partie
+			if ( ! supprimerJoueurParticipe(joueurId, supprimerJoueurParticipe)) {
+				throw new LigueException("Des commentaires de matchs sont associés au joueur. " +
+						"<br>Vous devez supprimer ces commentaires afin du supprimer le joueur.");
+			}
+			if ( ! supprimerJoueurFaitPartie(joueurId, supprimerJoueurFaitPartie)) {
+				throw new LigueException("Le joueur fait partie d'une ou de plusieurs équipes. " +
+						"<br>Vous devez supprimer ces liens afin du supprimer le joueur.");
+			}
+
+			PreparedStatement preparedStatement = null;
+			String query = "DELETE FROM joueur WHERE joueurid = ? ";
+
+			try {
+
+				connexion = db.getConnection();
+
+				preparedStatement = connexion.prepareStatement(query);
+				preparedStatement.setInt(1, joueurId);
+				preparedStatement.execute();
+
+				connexion.commit();
+				success = true;
+
+			} catch (SQLException e) {
+				System.out.println(e);
+				System.out.println("USERWARNING - Une erreur est survenue durant la suppression du joueur.\n");
+				connexion.rollback();
+			} finally {
+				// fermeture de la connexion
+				connexion.close();
+			}
+
+		} else {
+			System.out.println("USERWARNING - Suppression avorté, veuillez vous assurer de supprimer toutes les informations reliés au joueur.\n");
+		}
+
+		return success;
+
 	}
+
 
 	/**
 	 *
@@ -501,7 +575,7 @@ public class GestionLigue {
 	 * @return
 	 * @throws SQLException
 	 */
-	public boolean supprimerJoueurParticipe(int JoueurId) throws SQLException {
+	public boolean supprimerJoueurParticipe(int JoueurId, Boolean accepteSuppression) throws SQLException {
 		connexion = db.getConnection();
 
 		boolean succes = true;
@@ -520,12 +594,7 @@ public class GestionLigue {
 		}
 
 		if (nbParticipe > 0) {
-			System.out.printf("Le joueur a participé à %s matchs. Supprimer les commentaires ? (o/n) : ", nbParticipe);
-
-			Scanner scanner = new Scanner(System.in);
-			String confirmation = scanner.next();
-
-			if (confirmation.equals("o")) {
+			if (accepteSuppression) {
 
 				PreparedStatement preparedStatement = null;
 
@@ -560,7 +629,7 @@ public class GestionLigue {
 	 * @return
 	 * @throws SQLException
 	 */
-	public boolean supprimerJoueurFaitPartie(int JoueurId) throws SQLException {
+	public boolean supprimerJoueurFaitPartie(int JoueurId, Boolean accepteSuppression) throws SQLException {
 		connexion = db.getConnection();
 
 		boolean succes = true;
@@ -579,12 +648,8 @@ public class GestionLigue {
 		}
 
 		if (nbFaitPartie > 0) {
-			System.out.printf("Le joueur fait partie de %s équipes. Supprimer les liens ? (o/n) : ", nbFaitPartie);
 
-			Scanner scanner = new Scanner(System.in);
-			String confirmation = scanner.next();
-
-			if (confirmation.equals("o")) {
+			if (accepteSuppression) {
 				PreparedStatement preparedStatement = null;
 
 				try {
@@ -749,6 +814,70 @@ public class GestionLigue {
 				connexion.close();
 			}
 		}
+	}
+
+	public boolean supprimerArbitre(Integer arbitreId) throws SQLException, LigueException {
+		boolean success = false;
+
+		connexion = db.getConnection();
+
+		PreparedStatement preparedStatementCheck = null;
+		String queryCheck = "SELECT "
+				+ "EXISTS (SELECT FROM arbitre WHERE arbitreid = ?) "
+				+ "AS arbitreExists, "
+				+ "EXISTS (SELECT FROM arbitre "
+				+ " INNER JOIN arbitrer ON arbitre.arbitreid = arbitrer.arbitreid "
+				+ " WHERE arbitre.arbitreid = ?) "
+				+ "AS arbitreArbitrer ";
+
+		preparedStatementCheck = connexion.prepareStatement(queryCheck);
+
+		preparedStatementCheck.setInt(1, arbitreId);
+		preparedStatementCheck.setInt(2, arbitreId);
+
+		ResultSet rs = preparedStatementCheck.executeQuery();
+		rs.next();
+
+		if (!rs.getBoolean("arbitreExists")) {
+			throw new LigueException("L'arbitre n'existe pas.");
+		} else if (rs.getBoolean("arbitreArbitrer")) {
+			// L'arbitre arbitre des matchs
+			throw new LigueException("Impossible de supprimer l'arbitre. <br> " +
+					" Veuillez vous assurer qu'il n'est affecté à aucun match.");
+		} else {
+
+			PreparedStatement preparedStatement = null;
+
+			String query = "DELETE FROM arbitre WHERE arbitreId = ?";
+
+
+			try {
+				preparedStatement = connexion.prepareStatement(query);
+				preparedStatement.setInt(1, arbitreId);
+
+				System.out.println(preparedStatement);
+
+
+				preparedStatement.executeUpdate();
+
+				connexion.commit();
+
+				success = true;
+
+			} catch (SQLException e) {
+
+
+
+				System.out.println(e.toString());
+				System.out.println("USERWARNING - Une erreur est survenue durant la suppresion de arbitre.");
+				connexion.rollback();
+			} finally {
+				// fermeture de la connexion
+				connexion.close();
+			}
+		}
+
+		return success;
 	}
 
 	/**

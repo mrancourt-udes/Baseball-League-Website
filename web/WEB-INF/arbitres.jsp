@@ -3,6 +3,9 @@
 <%@ page import="java.util.ListIterator" %>
 <%@ page import="ligueBaseball.TupleEquipe" %>
 <%@ page import="ligueBaseball.TupleArbitre" %>
+<%@ page import="java.security.MessageDigest" %>
+<%@ page import="java.security.DigestException" %>
+<%@ page import="javax.xml.bind.annotation.adapters.HexBinaryAdapter" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -34,6 +37,13 @@
     <jsp:include page="/WEB-INF/messageErreur.jsp" />
   </div>
 
+  <%
+    GestionLigue gestionLigue = new GestionLigue();
+    List joueurs = gestionLigue.getArbitres();
+    MessageDigest md = MessageDigest.getInstance("MD5");
+    HexBinaryAdapter hexAdapter = new HexBinaryAdapter();
+  %>
+
   <div class="row">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeArbitres">
       <thead>
@@ -46,9 +56,6 @@
       </thead>
       <tbody>
       <%
-        GestionLigue gestionLigue = new GestionLigue();
-        List joueurs = gestionLigue.getArbitres();
-
         if ( !joueurs.isEmpty() ) {
 
           ListIterator it = joueurs.listIterator();
@@ -61,7 +68,14 @@
         <td><%= tupleArbitre.prenom %></td>
         <td><%= tupleArbitre.nom %></td>
         <td>
-          <a class="nounderline" href="javascript:;">
+
+          <%
+            // Generation du token
+            String token = (hexAdapter).marshal(md.digest(Integer.toString(tupleArbitre.idArbitre).getBytes()));
+          %>
+
+          <a class="nounderline supprimer" href="javascript:;"
+                  data-id="<%= tupleArbitre.idArbitre %>" data-token="<%= token %>" data-action="supprimerArbitre">
             <span class="glyphicon glyphicon-trash"></span>
             Supprimer
           </a>
@@ -81,7 +95,10 @@
 
 </div> <!-- /container -->
 
+<script src="/resources/js/suppression.js"></script>
+
 <script>
+
   $(function () {
     $('#listeArbitres').dataTable({
       "oLanguage": {

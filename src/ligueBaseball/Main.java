@@ -190,7 +190,7 @@ public class Main {
 		System.out.print("Equipe : ");
 		nomEquipe = scanner.next();
 
-		inventaireManager.supprimerEquipe(nomEquipe);
+		//inventaireManager.supprimerEquipe(nomEquipe);
 	}
 
 	public void creerJoueur() throws SQLException {
@@ -272,7 +272,7 @@ public class Main {
 		System.out.print("Prénom du joueur : ");
 		joueurPrenom = scanner.next();
 
-		inventaireManager.supprimerJoueur(joueurNom, joueurPrenom);
+		//inventaireManager.supprimerJoueur(joueurNom, joueurPrenom);
 	}
 
 	public void creerMatch() throws SQLException {
@@ -280,7 +280,6 @@ public class Main {
 		java.util.Date MatchHeure = null; 
 		String EquipeNomLocal = null;
 		String EquipeNomVisiteur = null;
-
 
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 		java.util.Date date1 = null;

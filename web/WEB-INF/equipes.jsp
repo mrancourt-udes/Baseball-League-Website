@@ -5,6 +5,8 @@
   Time: 6:15 PM
 --%>
 <%@ page  import="java.util.*,java.text.*,ligueBaseball.*" contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.security.MessageDigest" %>
+<%@ page import="javax.xml.bind.annotation.adapters.HexBinaryAdapter" %>
 <html>
 <head>
   <title>Équipes - Système de gestion de ligue de Baseball</title>
@@ -29,6 +31,13 @@
     <jsp:include page="/WEB-INF/messageErreur.jsp" />
   </div>
 
+  <%
+    GestionLigue gestionLigue = new GestionLigue();
+    List equipes = gestionLigue.getEquipes();
+    MessageDigest md = MessageDigest.getInstance("MD5");
+    HexBinaryAdapter hexAdapter = new HexBinaryAdapter();
+  %>
+
   <div class="row">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeEquipes">
       <thead>
@@ -41,9 +50,6 @@
       <tbody>
 
       <%
-        GestionLigue gestionLigue = new GestionLigue();
-        List equipes = gestionLigue.getEquipes();
-
         if ( !equipes.isEmpty() ) {
 
           ListIterator it = equipes.listIterator();
@@ -55,7 +61,16 @@
         <td><%= tupleEquipe.idEquipe %></td>
         <td><%= tupleEquipe.nomEquipe %></td>
         <td>
-          <a class="nounderline" href="javascript:;">
+
+          <%
+            // Generation du token
+            String token = (hexAdapter).marshal(md.digest(Integer.toString(tupleEquipe.idEquipe).getBytes()));
+          %>
+
+          <a class="nounderline supprimer" href="javascript:;"
+             data-id="<%= tupleEquipe.idEquipe %>"
+             data-token="<%= token %>"
+             data-action="supprimerEquipe">
             <span class="glyphicon glyphicon-trash"></span>
             Supprimer
           </a>
@@ -75,6 +90,8 @@
   <jsp:include page="/WEB-INF/includes/footer.inc.jsp" />
 
 </div> <!-- /container -->
+
+<script src="/resources/js/suppression.js"></script>
 
 <script>
   $(function () {

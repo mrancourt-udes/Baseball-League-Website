@@ -22,7 +22,7 @@
               <span class="text-warning">Liste des équipes</span>
             </a></li>
             <li><a href="Equipes">
-              <span class="text-danger">Supprimer une équipe</span>
+              <span class="text-success">Supprimer une équipe</span>
             </a></li>
 
             <%--Joueurs--%>
@@ -34,7 +34,8 @@
               <span class="text-warning">Liste de joueurs</span>
             </a></li>
             <li><a href="Joueurs">
-              <span class="text-danger">Supprimer un joueur</span>
+              <span class="text-success
+              ">Supprimer un joueur</span>
             </a></li>
 
             <%--Match--%>
@@ -55,7 +56,7 @@
               <span class="text-success">Ajouter un arbitre</span>
             </a></li>
             <li><a href="Arbitres">
-              <span class="text-warning">Liste de arbitres</span>
+              <span class="text-success">Liste de arbitres</span>
             </a></li>
             <li><a href="/Routes?page=affecterArbitres">
               <span class="text-warning">Affecter des arbitres à un match</span>

@@ -26,7 +26,6 @@
     <h1>Gestion des arbitres</h1>
     <p>Gérez votre ligue de baseball efficacement.</p>
     <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterArbitre" role="button">Ajouter un arbitre &raquo;</a></p>
-
   </div>
 </div>
 
@@ -75,7 +74,11 @@
           %>
 
           <a class="nounderline supprimer" href="javascript:;"
-                  data-id="<%= tupleArbitre.idArbitre %>" data-token="<%= token %>" data-action="supprimerArbitre">
+             data-toggle="modal" data-target="#suppressionModal"
+             data-suppressionitem="<%= tupleArbitre.prenom + " " + tupleArbitre.nom %>"
+             data-id="<%= tupleArbitre.idArbitre %>"
+             data-token="<%= token %>"
+             data-action="supprimerArbitre">
             <span class="glyphicon glyphicon-trash"></span>
             Supprimer
           </a>
@@ -89,6 +92,30 @@
       %>
       </tbody>
     </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="suppressionModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="modalLabel">
+            <span class="glyphicon glyphicon-warning-sign text-danger"></span>
+            Supression de l'arbitre <span class="suppressionItem"></span></h4>
+        </div>
+        <div class="modal-body">
+          <p>
+            Souhaitez-vous vraiment supprimer l'arbitre <span class="suppressionItem"></span>.
+            <br/>Cette action est irréversible.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" id="confirmSuppression">Supprimer</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <jsp:include page="/WEB-INF/includes/footer.inc.jsp" />

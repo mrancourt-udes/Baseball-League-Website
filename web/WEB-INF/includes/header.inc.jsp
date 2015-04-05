@@ -19,7 +19,7 @@
               <span class="text-warning">Ajouter une équipe</span>
             </a></li>
             <li><a href="Equipes">
-              <span class="text-warning">Liste des équipes</span>
+              <span class="text-success">Liste des équipes</span>
             </a></li>
             <li><a href="Equipes">
               <span class="text-success">Supprimer une équipe</span>
@@ -70,4 +70,4 @@
     </div>
   </div>
 </nav>
-<div style="clear: both; height: 40px;"></div>
+<div class="clear margT40"></div>

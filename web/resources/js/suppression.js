@@ -1,31 +1,51 @@
 /**
  * Created by vonziper on 2015-04-05.
  */
-// Suppression
-function supprimer(id, token, action, caller) {
+// Modal de confirmtion de suppression
+$('#suppressionModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button qui a triggered le modal
+    var suppressionItem = button.data('suppressionitem') // Recuperation des data-* attributs
+
+    var modal = $(this)
+
+    modal.data('relatedTarget', button);
+    modal.find('.suppressionItem').text(suppressionItem)
+});
+
+// Bind la fonction pour supprimer un item
+$("#suppressionModal").on('click', "#confirmSuppression", function () {
+
+    var modal = $("#suppressionModal");
+    var button = modal.data('relatedTarget');
+    var modalUserMessages = $("#modalUserMessages")
+
+    // Recuperation des parametres
+    var id = button.data("id");
+    var token = button.data("token");
+    var action = button.data("action");
+
     $.ajax({
         url: 'Suppression',
         type: "POST",
         dataType: 'json',
-        data: ({id : id, token : token, action : action}),
+        data: ({
+            id : id,
+            token : token,
+            action : action
+        }),
         success: function(response) {
+
             toastr[response.status](response.msg);
 
             if (response.status == "success") {
-                caller.closest('tr').fadeOut();
+                button.closest('tr').fadeOut();
+                modal.modal('hide');
             }
 
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            toastr["error"]("Status: " + textStatus + "<br>Error: " + errorThrown);
+            msg = "Status: " + textStatus + "<br>Error: " + errorThrown;
+            afficherMessage(modalUserMessages, msg, "danger");
         }
     });
-}
-
-// Bind la fonction pour modifier le statut d'une demande
-$(".table").on('click', ".supprimer", function () {
-    var id = $(this).data("id");
-    var token = $(this).data("token");
-    var action = $(this).data("action");
-    supprimer(id, token, action, $(this));
 });

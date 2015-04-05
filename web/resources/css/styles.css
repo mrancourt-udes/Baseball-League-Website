@@ -15,3 +15,18 @@
 {
     opacity: .5;
 }
+
+.jumbotron {
+    background-color: #96b866;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("../img/background.png");
+}
+
+.clear {
+    clear: both;
+}
+
+.margT40 {
+    margin-top: 40px;
+}

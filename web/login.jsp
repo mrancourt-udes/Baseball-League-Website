@@ -19,13 +19,14 @@
   </div>
 </nav>
 
-<div style="clear: both; height: 40px;"></div>
+<div class="clear margT40"></div>
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
   <div class="container">
     <h1>Connexion</h1>
     <p>Gérez votre ligue de baseball efficacement.</p>
+    <p>&nbsp;</p>
   </div>
 </div>
 

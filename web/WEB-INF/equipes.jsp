@@ -67,7 +67,9 @@
             String token = (hexAdapter).marshal(md.digest(Integer.toString(tupleEquipe.idEquipe).getBytes()));
           %>
 
-          <a class="nounderline supprimer" href="javascript:;"
+          <a class="nounderline" href="javascript:;"
+             data-toggle="modal" data-target="#suppressionModal"
+             data-suppressionitem="<%= tupleEquipe.nomEquipe %>"
              data-id="<%= tupleEquipe.idEquipe %>"
              data-token="<%= token %>"
              data-action="supprimerEquipe">
@@ -81,10 +83,32 @@
 
         }
       %>
-
-
       </tbody>
     </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="suppressionModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="modalLabel">
+            <span class="glyphicon glyphicon-warning-sign text-danger"></span>
+            Supression de l'équipe <span class="suppressionItem"></span></h4>
+        </div>
+        <div class="modal-body">
+          <p>
+            Souhaitez-vous vraiment supprimer l'équipe <span class="suppressionItem"></span>.
+            Cette action est irréversible.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" id="confirmSuppression">Supprimer</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <jsp:include page="/WEB-INF/includes/footer.inc.jsp" />

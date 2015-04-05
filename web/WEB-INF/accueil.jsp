@@ -18,9 +18,11 @@
 <div class="jumbotron">
   <div class="container">
     <h1>Accueil</h1>
-      <p>Gérez votre ligue de baseball efficacement.</p>
+    <p>Gérez votre ligue de baseball efficacement.</p>
+    <p>&nbsp;</p>
   </div>
 </div>
+
 
 <div class="container">
 

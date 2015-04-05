@@ -83,7 +83,7 @@
         <td>
           <a class="nounderline" href="javascript:;"
              data-toggle="modal" data-target="#suppressionModal"
-             data-nom="<%= tupleJoueur.prenom + " " + tupleJoueur.nom %>"
+             data-suppressionitem="<%= tupleJoueur.prenom + " " + tupleJoueur.nom %>"
              data-id="<%= tupleJoueur.idJoueur %>" data-token="<%= token %>"
              data-action="supprimerJoueur">
             <span class="glyphicon glyphicon-trash"></span>
@@ -112,7 +112,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="modalLabel">Supression du joueur <span class="nomJoueur"></span></h4>
+          <h4 class="modal-title" id="modalLabel">
+            <span class="glyphicon glyphicon-warning-sign text-danger"></span>
+            Supression du joueur <span class="suppressionItem"></span></h4>
         </div>
         <div class="modal-body">
 
@@ -121,15 +123,21 @@
           <div class="checkbox">
             <label>
               <input class="optSuppression" type="checkbox" name="supprimerJoueurParticipe">
-              Supprimer les commentaires associés à <span class="nomJoueur"></span>
+              Supprimer les commentaires associés à <span class="suppressionItem"></span>.
             </label>
           </div>
           <div class="checkbox">
             <label>
               <input class="optSuppression" type="checkbox" name="supprimerJoueurFaitPartie">
-              Supprimer les liens des équipes dont <span class="nomJoueur"></span> fait parti.
+              Supprimer les liens des équipes dont <span class="suppressionItem"></span> fait parti.
             </label>
           </div>
+
+          <p>
+            Souhaitez-vous vraiment supprimer le joueur <span class="suppressionItem"></span>.
+            Cette action est irréversible.
+          </p>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -147,7 +155,7 @@
 
   $('#suppressionModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button qui a triggered le modal
-    var joueur = button.data('nom') // Recuperation des data-* attributs
+    var suppressionItem = button.data('suppressionitem') // Recuperation des data-* attributs
     var modal = $(this)
     var modalUserMessages = $("#modalUserMessages")
 
@@ -157,7 +165,7 @@
     $("input:checkbox.optSuppression").prop('checked', false);
 
     modal.data('relatedTarget', button);
-    modal.find('.nomJoueur').text(joueur)
+    modal.find('.suppressionItem').text(suppressionItem)
   });
 
   // Bind la fonction pour modifier le statut d'une demande

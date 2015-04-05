@@ -51,8 +51,6 @@ public class Suppression extends HttpServlet {
             action = request.getParameter("action");
         }
 
-        System.out.println(action);
-
         switch (action) {
             case "supprimerJoueur" :
                 traiterSuppressionJoueur(request, response);

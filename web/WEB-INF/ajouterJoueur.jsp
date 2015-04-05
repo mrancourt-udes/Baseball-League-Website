@@ -1,3 +1,7 @@
+<%@ page import="ligueBaseball.GestionLigue" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="ligueBaseball.TupleEquipe" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -33,19 +37,58 @@
 
       <form class="form-horizontal" action="FormHandler" method="post">
         <div class="form-group">
-          <label for="inputPrenom" class="control-label col-xs-3">Prénom </label>
+          <label for="prenom" class="control-label col-xs-3">Prénom </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputPrenom" name="inputPrenom" placeholder="Prénom">
+            <input type="text" class="form-control required" id="prenom" name="prenom" placeholder="Prénom">
           </div>
         </div>
+
         <div class="form-group">
-          <label for="inputNom" class="control-label col-xs-3">Nom </label>
+          <label for="nom" class="control-label col-xs-3">Nom </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputNom" name="inputNom" placeholder="Nom">
+            <input type="text" class="form-control required" id="nom" name="nom" placeholder="Nom">
           </div>
         </div>
+
         <div class="form-group">
-          <div class="col-xs-offset-3 col-xs-9">
+          <label for="equipe" class="control-label col-xs-3">Équipe </label>
+          <div class="col-xs-9">
+            <select class="form-control required" name="equipe" id="equipe">
+              <%
+                GestionLigue gestionLigue = new GestionLigue();
+                List equipes = gestionLigue.getEquipes();
+
+                if ( !equipes.isEmpty() ) {
+                  ListIterator it = equipes.listIterator();
+                  while (it.hasNext())
+                  {
+                    TupleEquipe tupleEquipe = (TupleEquipe) it.next();
+              %>
+              <option value="<%= tupleEquipe.nomEquipe %>"><%= tupleEquipe.nomEquipe %></option>
+              <%
+                  }
+                }
+              %>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputNom" class="control-label col-xs-3">Numéro </label>
+          <div class="col-xs-9">
+            <input type="text" class="form-control required" id="inputNom" name="inputNom" placeholder="Numéro de joueur">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputNom" class="control-label col-xs-3">Date début </label>
+          <div class="col-xs-9">
+            <input type="text" class="form-control required" id="dateDebut" name="dateDebut" placeholder="Date de début">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-xs-offset-3 col-xs-9 text-right">
             <button type="submit" name="ajouterJoueur" class="btn btn-success">Soumettre</button>
           </div>
         </div>
@@ -59,6 +102,14 @@
 </div> <!-- /container -->
 
 <script>
+
+  $('#dateDebut').datepicker({
+    todayHighlight: true,
+    weekStart: 0,
+    language : 'fr',
+    startView : 'decade'
+  });
+
   $('form').validate({
     highlight: function(element) {
       $(element).closest('.form-group').addClass('has-error');

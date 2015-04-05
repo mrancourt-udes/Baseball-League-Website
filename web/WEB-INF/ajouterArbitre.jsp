@@ -35,7 +35,7 @@
         <div class="form-group">
           <label for="inputPrenom" class="control-label col-xs-3">Prénom </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputPrenom" placeholder="Prénom">
+            <input type="text" class="form-control required" id="inputPrenom" name="inputPrenom" placeholder="Prénom">
           </div>
         </div>
         <div class="form-group">
@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="form-group">
-          <div class="col-xs-offset-3 col-xs-9">
+          <div class="col-xs-offset-3 col-xs-9 text-right">
             <button type="submit" name="ajouterArbitre" class="btn btn-success">Soumettre</button>
           </div>
         </div>

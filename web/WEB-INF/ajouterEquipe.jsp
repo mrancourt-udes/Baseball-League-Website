@@ -35,17 +35,17 @@
         <div class="form-group">
           <label for="inputEquipe" class="control-label col-xs-3">Équipe </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputEquipe" name="inputEquipe" placeholder="Équipe">
+            <input type="text" class="form-control required" id="inputEquipe" name="inputEquipe" placeholder="Nom de l'équipe">
           </div>
         </div>
         <div class="form-group">
           <label for="inputTerrain" class="control-label col-xs-3">Terrain </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputTerrain" name="inputTerrain" placeholder="Terrain">
+            <input type="text" class="form-control required" id="inputTerrain" name="inputTerrain" placeholder="Nom du terrain">
           </div>
         </div>
         <div class="form-group">
-          <div class="col-xs-offset-3 col-xs-9">
+          <div class="col-xs-offset-3 col-xs-9 text-right">
             <button type="submit" name="ajouterEquipe" class="btn btn-success">Soumettre</button>
           </div>
         </div>

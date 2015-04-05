@@ -177,7 +177,7 @@ public class Main {
 
 		System.out.print("Entrez le nom de l'equipe : ");
 		nomEquipe = scanner.next();		
-		inventaireManager.creerEquipe(nomEquipe, "");
+		//inventaireManager.creerEquipe(nomEquipe, "");
 	}
 
 	public void afficherEquipes() throws SQLException {
@@ -328,7 +328,7 @@ public class Main {
 		System.out.print("Nom de l'arbitre : ");
 		ArbitreNom = scanner.next();
 
-		inventaireManager.creerArbitre(ArbitrePrenom, ArbitreNom);
+		//inventaireManager.creerArbitre(ArbitrePrenom, ArbitreNom);
 	}
 
 	public void afficherArbitres() throws SQLException {

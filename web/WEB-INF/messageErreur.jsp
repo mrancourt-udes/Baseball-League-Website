@@ -2,17 +2,27 @@
 
 <%
     // affichage de la liste des messages d'erreur
-    if (request.getAttribute("listeMessageErreur") != null)
-    {
+    if (request.getAttribute("listeMessageErreur") != null) {
         ListIterator it = ((List) request.
                 getAttribute("listeMessageErreur")).listIterator();
         while (it.hasNext())
         {
         %>
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-danger" role="alert">
             <%= it.next() %>
         </div>
         <%
         }
-    }
+    } else if (request.getAttribute("listeMessageSucces") != null) {
+            ListIterator it = ((List) request.
+                    getAttribute("listeMessageSucces")).listIterator();
+            while (it.hasNext())
+            {
+            %>
+            <div class="alert alert-success" role="alert">
+                <%= it.next() %>
+            </div>
+            <%
+            }
+        }
 %>

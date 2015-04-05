@@ -22,13 +22,18 @@
   <div class="container">
     <h1>Gestion des arbitres</h1>
     <p>Gérez votre ligue de baseball efficacement.</p>
-    <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterEquipe" role="button">Ajouter un arbitre &raquo;</a></p>
+    <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterArbitre" role="button">Ajouter un arbitre &raquo;</a></p>
 
   </div>
 </div>
 
 <div class="container">
-  <!-- Example row of columns -->
+
+  <div class="row">
+    <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
+    <jsp:include page="/WEB-INF/messageErreur.jsp" />
+  </div>
+
   <div class="row">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeArbitres">
       <thead>

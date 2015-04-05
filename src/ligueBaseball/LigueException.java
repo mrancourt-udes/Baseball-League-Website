@@ -1,9 +1,9 @@
 package ligueBaseball;
 
 /**
- * L'exception BiblioException est lev�e lorsqu'une transaction est inad�quate.
+ * L'exception LigueException est levee lorsqu'une transaction est inadequate.
  * Par exemple
- *   -- livre inexistant
+ *   -- Joueur inexistant
  */
 
 public final class LigueException extends Exception

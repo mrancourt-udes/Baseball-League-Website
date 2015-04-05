@@ -22,12 +22,17 @@
   <div class="container">
     <h1>Gestion des joueurs</h1>
     <p>Gérez votre ligue de baseball efficacement.</p>
-    <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterEquipe" role="button">Ajouter un joueur &raquo;</a></p>
+    <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterJoueur" role="button">Ajouter un joueur &raquo;</a></p>
 
   </div>
 </div>
 
 <div class="container">
+
+  <div class="row">
+    <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
+    <jsp:include page="/WEB-INF/messageErreur.jsp" />
+  </div>
 
   <%
 

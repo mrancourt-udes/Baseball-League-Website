@@ -1,3 +1,8 @@
+<%@ page import="ligueBaseball.GestionLigue" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="ligueBaseball.TupleEquipe" %>
+<%@ page import="ligueBaseball.TupleArbitre" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -30,16 +35,107 @@
 
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
-
       <form class="form-horizontal" action="FormHandler" method="post">
+
         <div class="form-group">
-          <label for="inputPrenom" class="control-label col-xs-3">Prénom </label>
+          <label for="matchDate" class="control-label col-xs-3">Date </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputPrenom" name="inputPrenom" placeholder="Prénom">
+            <input type="text" class="form-control required" id="matchDate" name="matchDate" placeholder="Date du match">
           </div>
         </div>
+
         <div class="form-group">
-          <div class="col-xs-offset-3 col-xs-9">
+          <label for="matchHeure" class="control-label col-xs-3">Heure </label>
+          <div class="col-xs-9 input-group bootstrap-timepicker">
+            <input id="matchHeure" name="matchHeure" type="text" class="form-control required">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+          </div>
+        </div>
+
+        <%
+          GestionLigue gestionLigue = new GestionLigue();
+          List equipes = gestionLigue.getEquipes();
+        %>
+
+        <div class="form-group">
+          <label for="equipeLocale" class="control-label col-xs-3">Équipe local </label>
+          <div class="col-xs-9">
+            <select class="form-control required" name="equipeLocale" id="equipeLocale">
+              <%
+                if ( !equipes.isEmpty() ) {
+                  ListIterator it = equipes.listIterator();
+                  while (it.hasNext())
+                  {
+                    TupleEquipe tupleEquipe = (TupleEquipe) it.next();
+              %>
+              <option value="<%= tupleEquipe.nomEquipe %>"><%= tupleEquipe.nomEquipe %></option>
+              <%
+                  }
+                }
+              %>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="equipeVisiteur" class="control-label col-xs-3">Équipe visiteur </label>
+          <div class="col-xs-9">
+            <select class="form-control required" name="equipeVisiteur" id="equipeVisiteur">
+              <%
+                if ( !equipes.isEmpty() ) {
+                  ListIterator it = equipes.listIterator();
+                  while (it.hasNext())
+                  {
+                    TupleEquipe tupleEquipe = (TupleEquipe) it.next();
+              %>
+              <option value="<%= tupleEquipe.nomEquipe %>"><%= tupleEquipe.nomEquipe %></option>
+              <%
+                  }
+                }
+              %>
+            </select>
+          </div>
+        </div>
+
+        <%
+          List arbitres = gestionLigue.getArbitres();
+        %>
+        <span data-bind='foreach: arbitres' style="display:block;">
+          <div class="form-group">
+
+            <label for="equipeVisiteur" class="control-label col-xs-3">
+              <!-- ko if: $index() == 0  -->
+              Arbitres
+              <!-- /ko -->
+            </label>
+            <div class="col-xs-9">
+              <div class="input-group">
+                <select class="form-control" data-bind="attr: { id: 'arbitre_' + $index(), name: 'arbitre_' + $index(), css: $index() == 0 ? 'required' : '' }">
+                  <option value="" disabled="disabled" selected="selected">Choisissez</option>
+                  <%
+                    if ( !equipes.isEmpty() ) {
+                      ListIterator it = arbitres.listIterator();
+                      while (it.hasNext())
+                      {
+                        TupleArbitre tupleArbitre = (TupleArbitre) it.next();
+                  %>
+                  <option value="<%= tupleArbitre.idArbitre %>"><%= tupleArbitre.prenom + " " + tupleArbitre.nom %></option>
+                  <%
+                      }
+                    }
+                  %>
+                </select>
+                <span class="input-group-btn">
+                    <button data-bind="click: $root.retirerArbitre, css: $parent.arbitres().length == 1 ? 'disabled' : ''" class="btn btn-default" type="button">-</button>
+                    <button data-bind="click: $root.ajouterArbitre, css: $parent.arbitres().length >= 4 ? 'disabled' : ''" class="btn btn-default" type="button">+</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </span>
+
+        <div class="form-group">
+          <div class="col-xs-offset-3 col-xs-9 text-right">
             <button type="submit" name="affecterArbitres" class="btn btn-success">Soumettre</button>
           </div>
         </div>
@@ -70,6 +166,39 @@
       }
     }
   });
+
+  // Class représentant un arbitre
+  function Arbitre() {
+    var self = this;
+    self.arbitreId = ko.observable();
+    self.prenom = ko.observable();
+    self.nom = ko.observable();
+  }
+
+  // viewModel pour la gestion et l'initialisation des inscriptions
+  function ArbitresViewModel() {
+
+    // Modeles
+    var self = this;
+
+    // Initialisation. Création d'un inscription initial
+    self.arbitres = ko.observableArray([new Arbitre()]);
+
+    // Ajout d'un inscription
+    self.ajouterArbitre = function () {
+      self.arbitres.push(new Arbitre());
+    }
+
+    // Suppression d'un inscription
+    self.retirerArbitre = function (arbitre) {
+      self.arbitres.remove(arbitre);
+    }
+
+  }
+
+  // Activation de knockout.js
+  ko.applyBindings(new ArbitresViewModel());
+
 </script>
 
 </body>

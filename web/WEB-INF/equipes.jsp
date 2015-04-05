@@ -23,7 +23,12 @@
 </div>
 
 <div class="container">
-  <!-- Example row of columns -->
+
+  <div class="row">
+    <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
+    <jsp:include page="/WEB-INF/messageErreur.jsp" />
+  </div>
+
   <div class="row">
     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent" id="listeEquipes">
       <thead>
@@ -45,21 +50,20 @@
           while (it.hasNext())
           {
             TupleEquipe tupleEquipe = (TupleEquipe) it.next();
-          %>
-          <tr>
-            <td><%= tupleEquipe.idEquipe %></td>
-            <td><%= tupleEquipe.nomEquipe %></td>
-            <td>
-              <a class="nounderline" href="javascript:;">
-                <span class="glyphicon glyphicon-trash"></span>
-                Supprimer
-              </a>
-            </td>
-          </tr>
-          <%
-            }
-          %>
+      %>
+      <tr>
+        <td><%= tupleEquipe.idEquipe %></td>
+        <td><%= tupleEquipe.nomEquipe %></td>
+        <td>
+          <a class="nounderline" href="javascript:;">
+            <span class="glyphicon glyphicon-trash"></span>
+            Supprimer
+          </a>
+        </td>
+      </tr>
       <%
+          }
+
         }
       %>
 

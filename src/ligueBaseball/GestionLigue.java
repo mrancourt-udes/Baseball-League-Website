@@ -25,10 +25,9 @@ public class GestionLigue {
 	 * @param nomEquipe Nom de l'équipe à créer
 	 * @throws SQLException Exception SQL
 	 */
-	public void creerEquipe(String nomEquipe, String nomTerrain) throws SQLException {
+	public void creerEquipe(String nomEquipe, String nomTerrain) throws SQLException, LigueException {
 		int terrainId;
 
-		Scanner scanner = new Scanner(System.in);
 		connexion = db.getConnection();
 
 		PreparedStatement preparedStatementCheck = null;
@@ -44,7 +43,7 @@ public class GestionLigue {
 		rs.next();
 
 		if (rs.getBoolean("equipeExists")) {
-			System.out.printf("USERWARNING - L'équipe «%s» existe déjà.\n", nomEquipe);
+			throw new LigueException("L'équipe "+nomEquipe+" existe déjà");
 		} else {
 
 			terrainId = traitementTerrain(nomTerrain);
@@ -701,7 +700,7 @@ public class GestionLigue {
 	 * la ligue il n’y a pas d’homonymes.
 	 * @throws SQLException Exception SQL
 	 */
-	public void creerArbitre(String ArbitrePrenom, String ArbitreNom) throws SQLException {
+	public void creerArbitre(String ArbitrePrenom, String ArbitreNom) throws SQLException, LigueException {
 
 		connexion = db.getConnection();
 
@@ -719,7 +718,7 @@ public class GestionLigue {
 		rs.next();
 
 		if (rs.getBoolean("arbitreExists")) {
-			System.out.printf("USERWARNING - L'arbitre %s %s existe déjà.", ArbitrePrenom, ArbitreNom);
+			throw new LigueException("L'arbitre «"+ ArbitrePrenom + " " + ArbitreNom + "» existe déjà.");
 		} else {
 
 			String queryId = "SELECT MAX(arbitreid)+1 AS nextArbitreId FROM arbitre";
@@ -1201,8 +1200,6 @@ public class GestionLigue {
 		int terrainId = 0;
 		String adresseTerrain;
 
-		Scanner scanner = new Scanner(System.in);
-
 		connexion = db.getConnection();
 
 		PreparedStatement preparedStatementCheck = null;
@@ -1217,9 +1214,7 @@ public class GestionLigue {
 		ResultSet rs = preparedStatementCheck.executeQuery();
 		rs.next();
 
-		if (rs.getBoolean("terrainExists")) {
-			System.out.printf("Bon nom de terrain");
-		} else {
+		if (!rs.getBoolean("terrainExists")) {
 
 			System.out.println("Creation d'un nouveau terrain");
 
@@ -1231,9 +1226,6 @@ public class GestionLigue {
 
 			PreparedStatement preparedStatement = null;
 
-			System.out.println("L'adresse du terrain est : ");
-			adresseTerrain = scanner.next();
-
 			String query = "insert into terrain (terrainid, terrainnom, terrainadresse)"
 					+ "values (?, ?, ?); ";
 
@@ -1241,7 +1233,7 @@ public class GestionLigue {
 				preparedStatement = connexion.prepareStatement(query);
 				preparedStatement.setInt(1, terrainId);
 				preparedStatement.setString(2, nomTerrain);
-				preparedStatement.setString(3, adresseTerrain);
+				//preparedStatement.setString(3, adresseTerrain);
 				preparedStatement.executeUpdate();
 				connexion.commit();
 			} catch (SQLException e) {

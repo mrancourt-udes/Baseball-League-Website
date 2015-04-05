@@ -1,0 +1,13 @@
+.nounderline {
+    text-decoration: none !important;
+}
+
+.input-group[class*="col-"] {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.addremove {
+    vertical-align: bottom;
+    font-size: 20px;
+}

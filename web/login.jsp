@@ -19,6 +19,8 @@
   </div>
 </nav>
 
+<div style="clear: both; height: 40px;"></div>
+
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
   <div class="container">
@@ -72,7 +74,7 @@
           </div>
         </div>
         <div class="form-group">
-          <div class="col-xs-offset-3 col-xs-9">
+          <div class="col-xs-offset-3 col-xs-9 text-right">
             <button type="submit" class="btn btn-success">Connexion</button>
           </div>
         </div>

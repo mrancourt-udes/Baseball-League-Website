@@ -10,10 +10,6 @@
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
-        <servlet-name>Login</servlet-name>
-        <servlet-class>ligueBaseballServlet.Login</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>Routes</servlet-name>
         <servlet-class>ligueBaseballServlet.Routes</servlet-class>
     </servlet>
@@ -38,13 +34,13 @@
         <servlet-class>ligueBaseballServlet.Matchs</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>ligueBaseballServlet.Login</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Logout</servlet-name>
         <servlet-class>ligueBaseballServlet.Logout</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>Login</servlet-name>
-        <url-pattern>/Login</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Routes</servlet-name>
         <url-pattern>/Routes</url-pattern>
@@ -70,10 +66,15 @@
         <url-pattern>/Matchs</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
     <error-page>
+        <error-code>404</error-code>
         <location>/404.html</location>
     </error-page>
 </web-app>

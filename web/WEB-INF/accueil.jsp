@@ -23,7 +23,12 @@
 </div>
 
 <div class="container">
-  <!-- Example row of columns -->
+
+  <div class="row">
+    <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
+    <jsp:include page="/WEB-INF/messageErreur.jsp" />
+  </div>
+
   <div class="row">
 
     <h2>Équipes</h2>

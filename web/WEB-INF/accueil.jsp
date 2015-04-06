@@ -19,7 +19,12 @@
   <div class="container">
     <h1>Accueil</h1>
     <p>Gérez votre ligue de baseball efficacement.</p>
-    <p>&nbsp;</p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="Routes?page=importer" role="button">
+        <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Importer </a>&nbsp;
+      <a class="btn btn-primary btn-lg" href="Routes?page=exporter" role="button">
+        <span class="glyphicon glyphicon-export" aria-hidden="true"></span> Exporter </a>&nbsp;
+    </p>
   </div>
 </div>
 

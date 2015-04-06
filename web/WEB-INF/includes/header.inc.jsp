@@ -68,6 +68,14 @@
         <li><a href="Logout">Sortir</a></li>
       </ul>
     </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <div class="navbar-form navbar-right" role="form">
+        <a class="btn btn-success" href="Routes?page=importer" role="button">
+          <span class="glyphicon glyphicon-import" aria-hidden="true"></span> Importer </a>
+        <a class="btn btn-success" href="Routes?page=exporter" role="button">
+          <span class="glyphicon glyphicon-export" aria-hidden="true"></span> Exporter </a>
+      </div>
+    </div><!--/.navbar-collapse -->
   </div>
 </nav>
 <div class="clear margT40"></div>

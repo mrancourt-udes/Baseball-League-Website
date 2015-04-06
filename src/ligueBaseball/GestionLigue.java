@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class GestionLigue {
 
@@ -1478,6 +1477,91 @@ public class GestionLigue {
 		}
 	}
 
+	public void insererEquipe(List<TupleJoueur> joueurs) throws SQLException, LigueException{
+		connexion = db.getConnection();
+
+		PreparedStatement preparedStatementCheck = null;
+		String queryCheck = "SELECT "
+				+ "EXISTS (SELECT FROM equipe WHERE equipeNom = ?) "
+				+ "AS equipeExists";
+
+		preparedStatementCheck = connexion.prepareStatement(queryCheck);
+
+		preparedStatementCheck.setString(1, joueurs.get(0).nomEquipe);
+
+		ResultSet rs = preparedStatementCheck.executeQuery();
+		rs.next();
+
+		System.out.println(preparedStatementCheck);
+
+		int equipeId;
+
+		if (rs.getBoolean("equipeExists")) {
+			throw new LigueException("Cette équipe est déjà enregistrée.");
+		} else {
+			String queryIdEquipe = "SELECT MAX(equipeId)+1 AS nextEquipeId FROM equipe";
+			PreparedStatement preparedStatementIdEquipe = connexion.prepareStatement(queryIdEquipe);
+			ResultSet rsIdEquipe = preparedStatementIdEquipe.executeQuery();
+			rsIdEquipe.next();
+			equipeId = rsIdEquipe.getInt("nextEquipeId");
+		}
+
+		String queryIdJoueur = "SELECT MAX(joueurId)+1 AS nextJoueurId FROM joueur";
+		PreparedStatement preparedStatementIdJoueur = connexion.prepareStatement(queryIdJoueur);
+		ResultSet rsIdJoueur = preparedStatementIdJoueur.executeQuery();
+		rsIdJoueur.next();
+		int joueurId = rsIdJoueur.getInt("nextJoueurId");
+
+		String queryEquipe = "INSERT INTO equipe (equipeid, equipenom) "
+				+ "VALUES (?, ?); ";
+
+		String queryJoueur = "INSERT INTO joueur (joueurid, joueurNom, joueurPrenom) "
+				+ "VALUES (?, ?, ?); ";
+
+		String queryJoueurFP = "INSERT INTO faitpartie (joueurid, equipeid, numero, datedebut) "
+				+ "VALUES (?, ?, ?, ?); ";
+
+		PreparedStatement preparedStatementEquipe = connexion.prepareStatement(queryEquipe) ;
+		PreparedStatement preparedStatementJoueur = connexion.prepareStatement(queryJoueur) ;
+		PreparedStatement preparedStatementJoueurFP = connexion.prepareStatement(queryJoueurFP) ;
+
+		try {
+
+			// Ajout de l'équipe
+			preparedStatementEquipe.setInt(1, equipeId);
+			preparedStatementEquipe.setString(2, joueurs.get(0).nomEquipe);
+			preparedStatementEquipe.executeUpdate();
+
+			// insertion en batch
+			for (TupleJoueur joueur : joueurs) {
+				preparedStatementJoueur.setInt(1, joueurId);
+				preparedStatementJoueur.setString(2, joueur.nom);
+				preparedStatementJoueur.setString(3, joueur.prenom);
+				preparedStatementJoueur.addBatch();
+
+				preparedStatementJoueurFP.setInt(1, joueurId);
+				preparedStatementJoueurFP.setInt(2, equipeId);
+				preparedStatementJoueurFP.setInt(3, joueur.numero);
+				preparedStatementJoueurFP.setDate(4, joueur.dateDebut);
+				preparedStatementJoueurFP.addBatch();
+
+				joueurId ++;
+
+			}
+
+			preparedStatementJoueur.executeBatch();
+			preparedStatementJoueurFP.executeBatch();
+
+			connexion.commit();
+
+		} catch (SQLException e) {
+			System.out.println("USERWARNING - Une erreur est survenue durant l'insertion des joueurs.");
+			connexion.rollback();
+		} finally {
+			// fermeture de la connexion
+			connexion.close();
+		}
+	}
 
 	/**
 	 * traitementTerrain

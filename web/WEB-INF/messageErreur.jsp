@@ -9,6 +9,7 @@
         {
         %>
         <div class="alert alert-success" role="alert">
+            <span class="glyphicon glyphicon-ok-sign" data-aria-hidden="true"></span>
             <%= it.next() %>
         </div>
         <%
@@ -22,11 +23,12 @@
         {
         %>
         <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" data-aria-hidden="true"></span>
             <%= it.next() %>
         </div>
         <%
         }
-                session.removeAttribute("listeMessageSucces");
+                session.removeAttribute("listeMessageErreur");
             }
 
     // affichage de la liste des messages d'erreur
@@ -37,6 +39,7 @@
         {
 %>
 <div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" data-aria-hidden="true"></span>
     <%= it.next() %>
 </div>
 <%
@@ -48,6 +51,7 @@
     {
 %>
 <div class="alert alert-success" role="alert">
+    <span class="glyphicon glyphicon glyphicon-ok-sign" data-aria-hidden="true"></span>
     <%= it.next() %>
 </div>
 <%

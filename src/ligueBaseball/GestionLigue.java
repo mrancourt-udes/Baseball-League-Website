@@ -14,7 +14,7 @@ public class GestionLigue {
 	private Database db;
 	private Connection connexion;
 
-	public GestionLigue() {
+	public GestionLigue() throws LigueException {
 		db = Database.getInstance();
 	}
 

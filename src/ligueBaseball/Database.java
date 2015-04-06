@@ -13,19 +13,18 @@ public class Database {
 	private final static String user = "vonziper";
 	private final static String pwd = "tp3";
 	
-	public static Database getInstance() {
+	public static Database getInstance() throws LigueException {
 		if (dbInstance == null) {
 			dbInstance = new Database();
 		}
 		return dbInstance;
 	}
 	
-	Database() {
+	Database() throws LigueException {
 		try{
 			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException cnfe){
-			System.out.println("SYSTEMERROR – Impossible de trouver le Driver JDBC!");
-			System.exit(1);
+		} catch (ClassNotFoundException e){
+			throw new LigueException("Impossible de trouver le Driver JDBC!");
 		}
 	}	
 	
@@ -35,7 +34,7 @@ public class Database {
 			connexion = DriverManager.getConnection (url+dbName, user, pwd);
 			connexion.setAutoCommit(false); 
 		} catch (SQLException e) {
-			System.out.println("SYSTEMERROR – Problème de connexion à la base de données");
+			System.out.println("SYSTEMERROR – Problème de connexion à la base de données");
 			System.exit(1);
 		}
 		

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="exploded-war" name="ift287_tp4">
-    <output-path>$PROJECT_DIR$/out/artifacts/ift287_tp4</output-path>
-    <root id="root">
-      <element id="javaee-facet-resources" facet="ift287_tp4/web/Web" />
-    </root>
-  </artifact>
-</component>

@@ -19,7 +19,7 @@ public class GestionLigue {
 	}
 
 	/**
-	 * Crée une nouvelle équipe. L’équipe est identifiée de manière unique par 
+	 * Crée une nouvelle équipe. L’équipe est identifiée de manière unique par
 	 * son EquipeId.
 	 * @param nomEquipe Nom de l'équipe à créer
 	 * @throws SQLException Exception SQL
@@ -71,7 +71,7 @@ public class GestionLigue {
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant la ceation de l'equipe.");
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}
@@ -114,7 +114,7 @@ public class GestionLigue {
 		} catch (SQLException e) {
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -264,11 +264,11 @@ public class GestionLigue {
 
 	/**
 	 * <JoueurNom> <JoueurPrenom> [<EquipeNom> <Numero> [<DateDebut>]]
-	 * Créer un nouveau joueur, le programme doit calculer le JoueurId, et 
-	 * l’utilisateur doit fournir le <JoueurNom> et le <JoueurPrenom> De manière 
-	 * optionnelle on peut donner les informations pour le joindre à une équipe. 
-	 * Si l’<EquipeNom > est donné il faut fournir le numéro du joueur dans 
-	 * cette équipe <Numero>. De manière optionnelle, on peut donner la 
+	 * Créer un nouveau joueur, le programme doit calculer le JoueurId, et
+	 * l’utilisateur doit fournir le <JoueurNom> et le <JoueurPrenom> De manière
+	 * optionnelle on peut donner les informations pour le joindre à une équipe.
+	 * Si l’<EquipeNom > est donné il faut fournir le numéro du joueur dans
+	 * cette équipe <Numero>. De manière optionnelle, on peut donner la
 	 * <DateDebut>.
 	 * @param nomJoueur Nom du joueur à créer
 	 * @param prenomJoueur Prénom du joueur à créer
@@ -304,7 +304,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la ceation d'un joueur.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 
@@ -336,16 +336,16 @@ public class GestionLigue {
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant l'assignation du joueur a une equipe.");
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}
 	}
 
 	/**
-	 * Afficher la liste de joueurs. Si le paramètre < EquipeNom > est fourni, 
-	 * le programme affiche seulement les joueurs de l’équipe correspondante. 
-	 * Si non, afficher tous les joueurs de toutes les équipes indiquant le nom 
+	 * Afficher la liste de joueurs. Si le paramètre < EquipeNom > est fourni,
+	 * le programme affiche seulement les joueurs de l’équipe correspondante.
+	 * Si non, afficher tous les joueurs de toutes les équipes indiquant le nom
 	 * de l’équipe.
 	 * @param EquipeNom Nom de l'équipe (Optionnel)
 	 * @throws SQLException
@@ -407,7 +407,7 @@ public class GestionLigue {
 		} catch (SQLException e) {
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -594,7 +594,7 @@ public class GestionLigue {
 					System.out.println("USERWARNING - Une erreur est survenue durant la suppression du joueur.");
 					connexion.rollback();
 				} finally {
-					// fermeture de la connexion 
+					// fermeture de la connexion
 					connexion.close();
 				}
 			} else {
@@ -648,7 +648,7 @@ public class GestionLigue {
 					System.out.println("USERWARNING - Une erreur est survenue durant la suppression du joueur.");
 					connexion.rollback();
 				} finally {
-					// fermeture de la connexion 
+					// fermeture de la connexion
 					connexion.close();
 				}
 			} else {
@@ -661,9 +661,9 @@ public class GestionLigue {
 
 	/**
 	 * 7. creerMatch <MatchDate> <MatchHeure> <EquipeNomLocal> <EquipeNomVisiteur>
-	 * Ajouter un match, en calculant le MatchId de manière automatique. Il faut 
-	 * vérifier que les équipes existent et qu’ils sont différents, une équipe 
-	 * ne peut pas jouer contre lui-même! Il faut vérifier aussi la date et 
+	 * Ajouter un match, en calculant le MatchId de manière automatique. Il faut
+	 * vérifier que les équipes existent et qu’ils sont différents, une équipe
+	 * ne peut pas jouer contre lui-même! Il faut vérifier aussi la date et
 	 * l’heure. Le terrain doit être assigné à celui de l’équipe locale.
 	 * @throws SQLException Exception SQL
 	 */
@@ -730,20 +730,19 @@ public class GestionLigue {
 			System.out.println("Le match a été créé avec succès.");
 
 		} catch (SQLException e) {
-			System.out.println(preparedStatement);
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la création du match.");
 			connexion.rollback();
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
 
 	/**
 	 * 8. creerArbitre <ArbitreNom> <ArbitrePrenom>
-	 * Créer un nouvel arbitre en calculant de manière automatique l’ArbitreId. 
-	 * Assurez-vous de ne pas répéter les noms des arbitres, on suppose que dans 
+	 * Créer un nouvel arbitre en calculant de manière automatique l’ArbitreId.
+	 * Assurez-vous de ne pas répéter les noms des arbitres, on suppose que dans
 	 * la ligue il n’y a pas d’homonymes.
 	 * @throws SQLException Exception SQL
 	 */
@@ -792,7 +791,7 @@ public class GestionLigue {
 				System.out.println("USERWARNING - Une erreur est survenue durant la création arbitres.");
 				connexion.rollback();
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}
@@ -836,10 +835,6 @@ public class GestionLigue {
 			try {
 				preparedStatement = connexion.prepareStatement(query);
 				preparedStatement.setInt(1, arbitreId);
-
-				System.out.println(preparedStatement);
-
-
 				preparedStatement.executeUpdate();
 
 				connexion.commit();
@@ -895,7 +890,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 
@@ -906,7 +901,15 @@ public class GestionLigue {
 
 		List<TupleArbitre> arbitres = new LinkedList<>();
 
-		String query = "SELECT ArbitreId, ArbitrePrenom, ArbitreNom FROM arbitre ";
+
+
+		String query = "SELECT DISTINCT arbitre.arbitreid, arbitrenom, arbitreprenom, " +
+				"  COUNT(matchid) AS \"nbMatchs\" " +
+				"FROM arbitrer " +
+				"  INNER JOIN arbitre " +
+				"    ON arbitrer.arbitreid = arbitrer.arbitreid " +
+				"GROUP BY arbitrer.arbitreid, arbitre.arbitreid " +
+				"ORDER BY arbitreid";
 
 		try {
 			PreparedStatement preparedStatement = connexion.prepareStatement(query);
@@ -920,7 +923,8 @@ public class GestionLigue {
 					tupleArbitre = new TupleArbitre(
 							rs.getInt("ArbitreId"),
 							rs.getString("ArbitrePrenom"),
-							rs.getString("ArbitreNom")
+							rs.getString("ArbitreNom"),
+							rs.getInt("nbMatchs")
 					);
 
 					arbitres.add(tupleArbitre);
@@ -1052,9 +1056,9 @@ public class GestionLigue {
 
 
 	/**
-	 * 11.entrerResultatMatch <MatchDate> <MatchHeure> <EquipeNomLocal> 
+	 * 11.entrerResultatMatch <MatchDate> <MatchHeure> <EquipeNomLocal>
 	 * <EquipeNomVisiteur> <PointsLocal> <PointsVisiteur>
-	 * Entrer le résultat d’un match. Valider que la valeur utilisée pour les 
+	 * Entrer le résultat d’un match. Valider que la valeur utilisée pour les
 	 * points soit toujours plus grande ou égale à zéro.
 	 * @throws SQLException Exception SQL
 	 */
@@ -1193,7 +1197,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -1312,7 +1316,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -1453,7 +1457,7 @@ public class GestionLigue {
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant la creation du terrain");
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}

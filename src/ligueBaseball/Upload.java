@@ -20,7 +20,6 @@ public class Upload extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // location to store file uploaded
-    String uploadPath;
     private static final String UPLOAD_DIRECTORY = "XML";
 
     // upload settings
@@ -82,6 +81,10 @@ public class Upload extends HttpServlet {
                         String fileName = new File(item.getName()).getName();
                         String filePath = uploadPath + File.separator + fileName;
                         File storeFile = new File(filePath);
+
+                        if (fileName.isEmpty()) {
+                            throw new LigueException("Aucun fichier sélectionner. <br>Veuillez vous assurer de sélectionner le fichier XML de votre équipe.");
+                        }
 
                         // saves the file on disk
                         item.write(storeFile);

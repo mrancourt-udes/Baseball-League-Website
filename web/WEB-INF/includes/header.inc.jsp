@@ -16,7 +16,7 @@
 
             <%--Equipe--%>
             <li><a href="/Routes?page=ajouterEquipe">
-              <span class="text-warning">Ajouter une équipe</span>
+              <span class="text-success">Ajouter une équipe</span>
             </a></li>
             <li><a href="Equipes">
               <span class="text-success">Liste des équipes</span>

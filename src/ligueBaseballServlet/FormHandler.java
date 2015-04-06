@@ -91,7 +91,7 @@ public class FormHandler extends HttpServlet {
                 biblio.gestionPret.retourner(idLivre, dateRetour);
             }*/
 
-            gestionLigue.creerEquipe(equipe, terrain);
+            //gestionLigue.creerEquipe(equipe, terrain);
 
             RequestDispatcher dispatcher = request
                     .getRequestDispatcher("/WEB-INF/equipes.jsp");
@@ -167,27 +167,34 @@ public class FormHandler extends HttpServlet {
     // TODO : Fixer la gestion du terrain
     public void traiterAjoutEquipe(HttpServletRequest request,
                                    HttpServletResponse response) throws ServletException, IOException {
+
         try {
 
             String equipe;
             String terrain;
+            String adresse = "";
 
-            if (request.getParameter("inputEquipe") == null) {
+            System.out.println(request.getParameter("terrain"));
+
+            if (request.getParameter("equipe") == null) {
                 throw new LigueException("Veuillez entrer un nom d'équipe");
             } else {
-                equipe = request.getParameter("inputEquipe");
+                equipe = request.getParameter("equipe");
             }
-            if (request.getParameter("inputTerrain") == null) {
+            if (request.getParameter("terrain") == null) {
                 throw new LigueException("Veuillez entrer un nom de terrain");
             } else {
-                terrain = request.getParameter("inputTerrain");
+                terrain = request.getParameter("terrain");
+            }
+            if (request.getParameter("adresse") != null) {
+                adresse = request.getParameter("adresse");
             }
 
             GestionLigue gestionLigue = new GestionLigue();
 
             // exécuter la transaction
             synchronized (gestionLigue) {
-                gestionLigue.creerEquipe(equipe, terrain);
+                gestionLigue.creerEquipe(equipe, terrain, adresse);
             }
 
             List listeMessageSucces = new LinkedList();

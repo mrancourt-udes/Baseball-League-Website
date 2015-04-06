@@ -25,7 +25,7 @@ public class GestionLigue {
 	 * @param nomEquipe Nom de l'équipe à créer
 	 * @throws SQLException Exception SQL
 	 */
-	public void creerEquipe(String nomEquipe, String nomTerrain) throws SQLException, LigueException {
+	public void creerEquipe(String nomEquipe, String nomTerrain, String adresse) throws SQLException, LigueException {
 		int terrainId;
 
 		connexion = db.getConnection();
@@ -46,7 +46,7 @@ public class GestionLigue {
 			throw new LigueException("L'équipe "+nomEquipe+" existe déjà");
 		} else {
 
-			terrainId = traitementTerrain(nomTerrain);
+			terrainId = traitementTerrain(nomTerrain, adresse);
 
 			connexion = db.getConnection();
 
@@ -69,8 +69,6 @@ public class GestionLigue {
 				preparedStatement.executeUpdate();
 				connexion.commit();
 			} catch (SQLException e) {
-				System.out.println(preparedStatementCheck);
-
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant la ceation de l'equipe.");
 			} finally {
@@ -159,6 +157,47 @@ public class GestionLigue {
 		}
 
 		return equipes;
+	}
+
+
+	public List<TupleTerrain> getTerrains() throws SQLException {
+
+		connexion = db.getConnection();
+
+		List<TupleTerrain> terrains = new LinkedList<>();
+
+		PreparedStatement preparedStatement = null;
+		String query =
+				"SELECT *"
+						+ "FROM terrain "
+						+ "ORDER BY terrainNom";
+
+		try {
+			preparedStatement = connexion.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				do {
+					TupleTerrain tupleTerrain;
+
+					tupleTerrain = new TupleTerrain(
+							rs.getInt("terrainid"),
+							rs.getString("terrainNom")
+					);
+
+					terrains.add(tupleTerrain);
+				} while (rs.next());
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e);
+			System.out.println("USERWARNING - Une erreur est survenue durant la recuperation des terrains.");
+		} finally {
+			// fermeture de la connexion
+			connexion.close();
+		}
+
+		return terrains;
 	}
 
 
@@ -1325,16 +1364,16 @@ public class GestionLigue {
 	 *Verifie si le nom du terrain est valide, si non, il en creer un nouveau
 	 * @throws SQLException Exception SQL
 	 */
-	public int traitementTerrain(String nomTerrain) throws SQLException {
+	public int traitementTerrain(String nomTerrain, String adresse) throws SQLException {
 		int terrainId = 0;
-		String adresseTerrain;
 
 		connexion = db.getConnection();
 
 		PreparedStatement preparedStatementCheck = null;
-		String queryCheck = "SELECT "
+		String queryCheck = "SELECT terrainid, "
 				+ "EXISTS (SELECT FROM terrain WHERE terrainNom = ?) "
-				+ "AS terrainExists";
+				+ "AS terrainExists "
+				+ " FROM terrain ";
 
 		preparedStatementCheck = connexion.prepareStatement(queryCheck);
 
@@ -1343,15 +1382,16 @@ public class GestionLigue {
 		ResultSet rs = preparedStatementCheck.executeQuery();
 		rs.next();
 
-		if (!rs.getBoolean("terrainExists")) {
-
-			System.out.println("Creation d'un nouveau terrain");
+		if (rs.getBoolean("terrainExists")) {
+			terrainId = rs.getInt("terrainid");
+		} else {
 
 			String queryId = "SELECT MAX(terrainId)+1 AS nextterrainId FROM terrain";
-			PreparedStatement preparedStatementId= connexion.prepareStatement(queryId);
+			PreparedStatement preparedStatementId = connexion.prepareStatement(queryId);
+
 			ResultSet rsId = preparedStatementId.executeQuery();
 			rsId.next();
-			terrainId = rsId.getInt("nextTerrainId");
+			terrainId = rsId.getInt("nextterrainId");
 
 			PreparedStatement preparedStatement = null;
 
@@ -1362,12 +1402,10 @@ public class GestionLigue {
 				preparedStatement = connexion.prepareStatement(query);
 				preparedStatement.setInt(1, terrainId);
 				preparedStatement.setString(2, nomTerrain);
-				//preparedStatement.setString(3, adresseTerrain);
+				preparedStatement.setString(3, adresse);
 				preparedStatement.executeUpdate();
 				connexion.commit();
 			} catch (SQLException e) {
-				System.out.println(preparedStatementCheck);
-
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant la creation du terrain");
 			} finally {
@@ -1375,6 +1413,7 @@ public class GestionLigue {
 				connexion.close();
 			}
 		}
+
 		return terrainId;
 	}
 

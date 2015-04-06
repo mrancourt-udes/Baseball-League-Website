@@ -21,7 +21,6 @@ import org.json.JSONObject;
 public class Suppression extends HttpServlet {
 
     private JSONObject jsonResponse = new JSONObject();
-    private GestionLigue gestionLigue = new GestionLigue();
     private Integer id;
     private String token = null;
     private String action = null;
@@ -84,6 +83,8 @@ public class Suppression extends HttpServlet {
                 supprimerJoueurFaitPartie = true;
             }
 
+            GestionLigue gestionLigue = new GestionLigue();
+
             if (gestionLigue.supprimerJoueur(id, supprimerJoueurParticipe, supprimerJoueurFaitPartie)) {
                 jsonResponse.put("status", "success");
                 jsonResponse.put("msg", "Le joueur a été supprimé avec succès!");
@@ -106,6 +107,8 @@ public class Suppression extends HttpServlet {
             HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
+
+            GestionLigue gestionLigue = new GestionLigue();
 
             if (gestionLigue.supprimerArbitre(id)) {
                 jsonResponse.put("status", "success");
@@ -130,6 +133,8 @@ public class Suppression extends HttpServlet {
     public void traiterSuppressionEquipe(
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+
+            GestionLigue gestionLigue = new GestionLigue();
 
             if (gestionLigue.supprimerEquipe(id)) {
                 jsonResponse.put("status", "success");

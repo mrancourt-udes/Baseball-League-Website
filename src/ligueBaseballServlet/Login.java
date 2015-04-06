@@ -21,41 +21,38 @@ public class Login extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-            HttpSession session = request.getSession();
-            // fermer la session si elle a déjà été ouverte lors d'un appel
-            // précédent
-            // survient lorsque l'usager recharge la page login.jsp
-            if (session.getAttribute("etat") != null) {
-                // pour déboggage seulement : afficher no session et information
-                System.out
-                        .println("GestionLigue: session déja crée; id="
-                                + session.getId());
-                // la méthode invalidate appelle le listener
-                // BiblioSessionListener; cette classe est chargée lors du
-                // démarrage de
-                // l'application par le serveur (voir le fichier web.xml)
-                session.invalidate();
-                session = request.getSession();
-                System.out.println("GestionLigue: session invalidée");
-            }
+        HttpSession session = request.getSession();
+        // fermer la session si elle a déjà été ouverte lors d'un appel
+        // précédent
+        // survient lorsque l'usager recharge la page login.jsp
+        if (session.getAttribute("etat") != null) {
+            // pour déboggage seulement : afficher no session et information
+            System.out
+                    .println("GestionLigue: session déja crée; id="
+                            + session.getId());
+            // la méthode invalidate appelle le listener
+            // BiblioSessionListener; cette classe est chargée lors du
+            // démarrage de
+            // l'application par le serveur (voir le fichier web.xml)
+            session.invalidate();
+            session = request.getSession();
+            System.out.println("GestionLigue: session invalidée");
+        }
 
-            // lecture des paramètres du formulaire login.jsp
-            String userIdOracle = request.getParameter("userIdBD");
-            String motDePasseOracle = request.getParameter("motDePasseBD");
-            String serveur = request.getParameter("serveur");
-            String adresseIP = request.getParameter("adresseIP");
-            String bd = request.getParameter("bd");
+        // lecture des paramètres du formulaire login.jsp
+        String userIdOracle = request.getParameter("userIdBD");
+        String motDePasseOracle = request.getParameter("motDePasseBD");
+        String serveur = request.getParameter("serveur");
+        String adresseIP = request.getParameter("adresseIP");
+        String bd = request.getParameter("bd");
 
-            // ouvrir une connexion avec la BD et créer les gestionnaires
-            System.out.println("Login: session id="
-                    + session.getId());
+        // ouvrir une connexion avec la BD et créer les gestionnaires
+        System.out.println("Login: session id="
+                + session.getId());
 
-            // TODO : Gerer la connexion
+        // TODO : Gerer la connexion
+        try {
             GestionLigue gestionLigue = new GestionLigue();
-
-            // stocker l'instance de GestionBibliotheque au sein de la session
-            // de l'utilisateur
-            session.setAttribute("gestionLigue", gestionLigue);
 
             // afficher le menu membre en appelant la page selectionMembre.jsp
             // tous les JSP sont dans /WEB-INF/
@@ -65,6 +62,17 @@ public class Login extends HttpServlet {
                     .getRequestDispatcher("/WEB-INF/accueil.jsp");
             dispatcher.forward(request, response);
             session.setAttribute("etat", new Integer(LigueConstantes.CONNECTE));
+
+        } catch (LigueException e) {
+            List listeMessageErreur = new LinkedList();
+            listeMessageErreur.add(e.toString());
+
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+
+            RequestDispatcher dispatcher = request
+                    .getRequestDispatcher("Login");
+            dispatcher.forward(request, response);
+        }
 
     }
 

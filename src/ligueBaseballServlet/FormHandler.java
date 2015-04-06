@@ -118,7 +118,7 @@ public class FormHandler extends HttpServlet {
             listeMessageSucces.add("L'arbitre «" + prenom + " " + nom + "» a été ajouté avec succès!");
 
             HttpSession session = request.getSession(false);
-            //save message in session
+            // sauvegarde du message dans la session
             session.setAttribute("listeMessageSucces", listeMessageSucces);
             response.sendRedirect("Routes?page=joueurs");
 
@@ -172,7 +172,7 @@ public class FormHandler extends HttpServlet {
             request.setAttribute("listeMessageSucces", listeMessageSucces);
 
             HttpSession session = request.getSession(false);
-            //save message in session
+            // sauvegarde du message dans la session
             session.setAttribute("listeMessageSucces", listeMessageSucces);
             response.sendRedirect("Routes?page=arbitres");
 
@@ -232,7 +232,7 @@ public class FormHandler extends HttpServlet {
             request.setAttribute("listeMessageSucces", listeMessageSucces);
 
             HttpSession session = request.getSession(false);
-            //save message in session
+            // sauvegarde du message dans la session
             session.setAttribute("listeMessageSucces", listeMessageSucces);
             response.sendRedirect("Routes?page=equipes");
 
@@ -311,7 +311,7 @@ public class FormHandler extends HttpServlet {
             request.setAttribute("listeMessageSucces", listeMessageSucces);
 
             HttpSession session = request.getSession(false);
-            //save message in session
+            // sauvegarde du message dans la session
             session.setAttribute("listeMessageSucces", listeMessageSucces);
             response.sendRedirect("Routes?page=matchs");
 
@@ -410,7 +410,7 @@ public class FormHandler extends HttpServlet {
             request.setAttribute("listeMessageSucces", listeMessageSucces);
 
             HttpSession session = request.getSession(false);
-            //save message in session
+            // sauvegarde du message dans la session
             session.setAttribute("listeMessageSucces", listeMessageSucces);
             response.sendRedirect("Routes?page=matchs");
 
@@ -501,7 +501,7 @@ public class FormHandler extends HttpServlet {
             request.setAttribute("listeMessageSucces", listeMessageSucces);
 
             HttpSession session = request.getSession(false);
-            //save message in session
+            // sauvegarde du message dans la session
             session.setAttribute("listeMessageSucces", listeMessageSucces);
             response.sendRedirect("Routes?page=matchs");
 

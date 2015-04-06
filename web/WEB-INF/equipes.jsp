@@ -88,8 +88,7 @@
           } else {
           %>
           <span class="disabled" style="color: #8a8a8a;"
-                data-toggle="tooltip" data-placement="top"
-                title="Impossible de supprimer l'équipe. Veuillez vous assurer qu'aucun joueur n'en fait partie.">
+                data-toggle="tooltip" data-placement="top">
           <span class="glyphicon glyphicon-trash"></span>
           Supprimer
           </span>
@@ -143,7 +142,10 @@
 <script>
 
   $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip({
+      html : true,
+      title : 'Impossible de supprimer l\'équipe. Veuillez vous assurer qu\'aucun joueur n\'en fait partie.'
+    })
   })
 
   $(function () {
@@ -152,8 +154,8 @@
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
       "aoColumnDefs": [
-        {"bSortable": false, "aTargets": [2]},
-        {"width": "90px", "aTargets": [2]}
+        {"bSortable": false, "aTargets": [5]},
+        {"width": "90px", "aTargets": [5]}
       ],
       "iDisplayLength": 10,
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]

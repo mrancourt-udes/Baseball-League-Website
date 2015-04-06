@@ -1210,19 +1210,25 @@ public class GestionLigue {
 
 		PreparedStatement preparedStatement = null;
 
-		String query = "SELECT m.matchid, b.arbitrePrenom || ' ' || b.arbitreNom AS arbitre, "
-				+ "pointslocal, pointsvisiteur, e1.equipeNom AS equipelocal, e2.equipeNom AS equipeVisiteur, "
-				+ "matchDate, to_char(matchHeure, 'HH24:MI:SS') AS matchheure, terrainnom "
-				+ "FROM match m "
-				+ "RIGHT JOIN arbitrer a ON a.matchid = m.matchid "
-				+ "LEFT JOIN arbitre b ON a.arbitreid = b.arbitreid "
-				+ "INNER JOIN equipe e1 ON e1.equipeid = m.equipelocal "
-				+ "INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur "
-				+ "INNER JOIN terrain t ON t.terrainid = m.terrainid ";
+		String query = "SELECT m.matchid, " +
+				"pointslocal, pointsvisiteur, e1.equipeNom AS equipelocal, e2.equipeNom AS equipeVisiteur, " +
+				"matchDate, to_char(matchHeure, 'HH24:MI:SS') AS matchheure, terrainnom, " +
+				"  (SELECT string_agg(arbitrePrenom || ' ' || arbitreNom, '<br />') " +
+				"   FROM arbitre a2 " +
+				"     INNER JOIN arbitrer ar " +
+				"       ON ar.arbitreid = a2.arbitreid " +
+				"   WHERE ar.matchid = m.matchid " +
+				"  ) AS \"arbitres\" " +
+				"FROM match m " +
+				"RIGHT JOIN arbitrer a ON a.matchid = m.matchid " +
+				"LEFT JOIN arbitre b ON a.arbitreid = b.arbitreid " +
+				"INNER JOIN equipe e1 ON e1.equipeid = m.equipelocal " +
+				"INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur " +
+				"INNER JOIN terrain t ON t.terrainid = m.terrainid ";
 		if(aPartirDate != null){
 			query += "WHERE matchdate > ? ";
 		}
-		query += "GROUP BY m.matchid, b.arbitrePrenom, b.arbitreNom, pointslocal, pointsvisiteur, "
+		query += "GROUP BY m.matchid, pointslocal, pointsvisiteur, "
 				+ "e1.equipeNom, e2.equipeNom, terrainnom "
 				+ "ORDER BY m.matchid ";
 
@@ -1234,7 +1240,6 @@ public class GestionLigue {
 			}
 			ResultSet rs = preparedStatement.executeQuery();
 
-
 			if (rs.next()) {
 
 				do {
@@ -1245,10 +1250,10 @@ public class GestionLigue {
 							rs.getString("equipevisiteur"),
 							(rs.getString("pointslocal") != null ? rs.getString("pointslocal") : "À venir"),
 							(rs.getString("pointsvisiteur") != null ? rs.getString("pointsvisiteur") : "À venir"),
-							rs.getString("arbitre"),
 							rs.getDate("matchDate"),
 							rs.getString("matchHeure"),
-							rs.getString("terrainnom")
+							rs.getString("terrainnom"),
+							rs.getString("arbitres")
 					);
 
 					matchs.add(tupleMatch);

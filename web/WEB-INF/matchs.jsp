@@ -28,15 +28,7 @@
 
 <div class="container">
 
-  <div class="alert alert-danger" role="alert">
-    <h3>TODOs</h3>
-    <ul>
-      <li>Fixer les doublons</li>
-      <li>Ajouter les arbitres</li>
-    </ul>
-  </div>
-
-  <div class="row">
+    <div class="row">
     <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
     <jsp:include page="/WEB-INF/messageErreur.jsp" />
   </div>
@@ -48,12 +40,12 @@
       <tr>
         <th>N°</th>
         <th>Local</th>
-        <th>visiteur</th>
+        <th>Visiteur</th>
         <th>Terrain</th>
         <th>Date</th>
         <th>Heure</th>
-        <th>Points Local</th>
-        <th>Points Visiteur</th>
+        <th>Score</th>
+        <th>Arbitres</th>
         <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
@@ -77,8 +69,8 @@
         <td><%= tupleMatch.terrain %></td>
         <td><%= tupleMatch.date %></td>
         <td><%= tupleMatch.heure %></td>
-        <td><%= tupleMatch.pointsLocal %></td>
-        <td><%= tupleMatch.pointsVisiteur %></td>
+        <td><%= tupleMatch.pointsLocal %> - <%= tupleMatch.pointsVisiteur %></td>
+        <td><%= tupleMatch.arbitres %></td>
         <td>
           <a class="nounderline" href="Routes?page=ajouterResultatMatch">
             <span class="glyphicon glyphicon-stats"></span>

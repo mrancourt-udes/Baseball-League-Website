@@ -13,19 +13,18 @@ public class TupleMatch {
     public String equipeVisiteur;
     public String pointsLocal;
     public String pointsVisiteur;
-    public String arbitres;
     public String terrain;
     public Date date;
     public String heure;
-
+    public String arbitres;
 
     public TupleMatch() {
 
     }
 
     public TupleMatch(int idMatch, String equipeLocal, String equipeVisiteur,
-                      String pointsLocal, String pointsVisiteur, String arbitres,
-                      Date date, String heure, String terrain) {
+                      String pointsLocal, String pointsVisiteur, Date date,
+                      String heure, String terrain, String arbitres) {
         this.idMatch = idMatch;
         this.equipeLocal = equipeLocal;
         this.equipeVisiteur = equipeVisiteur;

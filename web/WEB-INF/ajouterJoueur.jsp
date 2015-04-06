@@ -54,6 +54,7 @@
           <label for="equipe" class="control-label col-xs-3">Équipe </label>
           <div class="col-xs-9">
             <select class="form-control required" name="equipe" id="equipe">
+              <option value="" disabled="disabled" selected="selected" >Choisissez</option>
               <%
                 GestionLigue gestionLigue = new GestionLigue();
                 List equipes = gestionLigue.getEquipes();
@@ -74,14 +75,14 @@
         </div>
 
         <div class="form-group">
-          <label for="inputNom" class="control-label col-xs-3">Numéro </label>
+          <label for="numero" class="control-label col-xs-3">Numéro </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputNom" name="inputNom" placeholder="Numéro de joueur">
+            <input type="text" class="form-control required number" id="numero" name="numero" placeholder="Numéro de joueur">
           </div>
         </div>
 
         <div class="form-group">
-          <label for="inputNom" class="control-label col-xs-3">Date début </label>
+          <label for="dateDebut" class="control-label col-xs-3">Date début </label>
           <div class="col-xs-9">
             <input type="text" class="form-control required" id="dateDebut" name="dateDebut" placeholder="Date de début">
           </div>
@@ -107,7 +108,8 @@
     todayHighlight: true,
     weekStart: 0,
     language : 'fr',
-    startView : 'decade'
+    startView : 'decade',
+    format : 'dd-mm-yyyy'
   });
 
   $('form').validate({

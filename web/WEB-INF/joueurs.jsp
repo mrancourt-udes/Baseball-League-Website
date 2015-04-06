@@ -23,13 +23,12 @@
 <div class="jumbotron">
   <div class="container">
     <h1>Gestion des joueurs</h1>
-    <p>Gérez votre ligue de baseball efficacement.</p>
+    <p class="lead">Gérez votre ligue de baseball efficacement.</p>
     <p><a class="btn btn-primary btn-lg" href="/Routes?page=ajouterJoueur" role="button">Ajouter un joueur &raquo;</a></p>
-
   </div>
 </div>
 
-<div class="container">
+<div class="container equipesWrapper">
 
   <div class="row" id="messagesContainer">
     <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
@@ -53,7 +52,7 @@
       {
         TupleEquipe tupleEquipe = (TupleEquipe) it.next();
   %>
-  <div class="row">
+  <div class="row equipeWrapper">
     <h2><%= tupleEquipe.nomEquipe %></h2>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover statut_parent listeJoueurs">
       <thead>
@@ -61,6 +60,8 @@
         <th>N°</th>
         <th>Prénom</th>
         <th>Nom</th>
+        <th>Date début</th>
+        <th>Date fin</th>
         <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
@@ -77,9 +78,12 @@
 
       %>
       <tr>
-        <td><%= tupleJoueur.idJoueur %></td>
-        <td><%= tupleJoueur.nom %></td>
+        <td><%= tupleJoueur.numero %></td>
+        <td><%= tupleJoueur.nom %>
+        </td>
         <td><%= tupleJoueur.prenom %></td>
+        <td><%= tupleJoueur.getDateDebut() %></td>
+        <td><%= tupleJoueur.getDateFin() %></td>
         <td>
           <a class="nounderline" href="javascript:;"
              data-toggle="modal" data-target="#suppressionModal"
@@ -108,7 +112,7 @@
 
   <!-- Modal -->
   <div class="modal fade" id="suppressionModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -153,90 +157,97 @@
 
 <script>
 
-  $('#suppressionModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // Button qui a triggered le modal
-    var suppressionItem = button.data('suppressionitem') // Recuperation des data-* attributs
-    var modal = $(this)
-    var modalUserMessages = $("#modalUserMessages")
+    $('#suppressionModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) // Button qui a triggered le modal
+      var suppressionItem = button.data('suppressionitem') // Recuperation des data-* attributs
+      var modal = $(this)
+      var modalUserMessages = $("#modalUserMessages")
 
-    // Suppression des vieux messages
-    modalUserMessages.empty();
-    // Reinitialisation des checkboxes
-    $("input:checkbox.optSuppression").prop('checked', false);
+      // Suppression des vieux messages
+      modalUserMessages.empty();
+      // Reinitialisation des checkboxes
+      $("input:checkbox.optSuppression").prop('checked', false);
 
-    modal.data('relatedTarget', button);
-    modal.find('.suppressionItem').text(suppressionItem)
-  });
-
-  // Bind la fonction pour modifier le statut d'une demande
-  $("#suppressionModal").on('click', "#confirmSuppression", function () {
-
-    var modal = $("#suppressionModal");
-    var button = modal.data('relatedTarget');
-    var modalUserMessages = $("#modalUserMessages")
-    var msg;
-
-    // Recuperation des parametres
-    var id = button.data("id");
-    var token = button.data("token");
-    var action = button.data("action");
-    var supprimerJoueurParticipe = $( "input[name='supprimerJoueurParticipe']" ).prop('checked');
-    var supprimerJoueurFaitPartie = $( "input[name='supprimerJoueurFaitPartie']" ).prop('checked');
-
-    // Suppression des vieux messages
-    modalUserMessages.empty();
-
-    $.ajax({
-      url: 'Suppression',
-      type: "POST",
-      dataType: 'json',
-      data: ({
-        id : id,
-        token : token,
-        action : action,
-        supprimerJoueurParticipe : supprimerJoueurParticipe,
-        supprimerJoueurFaitPartie : supprimerJoueurFaitPartie
-      }),
-      success: function(response) {
-
-        if (response.status == "success") {
-          toastr[response.status](response.msg);
-          button.closest('tr').fadeOut();
-          modal.modal('hide');
-        } else {
-          afficherMessage(modalUserMessages, response.msg, response.status);
-        }
-
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        msg = "Status: " + textStatus + "<br>Error: " + errorThrown;
-        afficherMessage(modalUserMessages, msg, "danger");
-      }
+      modal.data('relatedTarget', button);
+      modal.find('.suppressionItem').text(suppressionItem)
     });
-  });
 
-  function afficherMessage(parent, msg, type) {
-    parent.append($("<div/>", {class : 'alert alert-danger', role : 'alert'})
-                    .append($("<span/>", {class : 'glyphicon glyphicon-exclamation-sign', 'aria-hidden' : true}))
-                    .append($("<span/>", {html : " " + msg}))
-    )
-  }
+    // Bind la fonction pour modifier le statut d'une demande
+    $("#suppressionModal").on('click', "#confirmSuppression", function () {
 
-  $(function () {
+      var modal = $("#suppressionModal");
+      var button = modal.data('relatedTarget');
+      var modalUserMessages = $("#modalUserMessages")
+      var msg;
 
-    $('.listeJoueurs').dataTable({
-      "oLanguage": {
-        "sUrl": "resources/js/localization/datatable_fr.txt"
-      },
-      "aoColumnDefs": [
-        {"bSortable": false, "aTargets": [3]},
-        {"width": "90px", "aTargets": [3]}
-      ],
-      "iDisplayLength": 10,
-      "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
-    })
+      // Recuperation des parametres
+      var id = button.data("id");
+      var token = button.data("token");
+      var action = button.data("action");
+      var supprimerJoueurParticipe = $( "input[name='supprimerJoueurParticipe']" ).prop('checked');
+      var supprimerJoueurFaitPartie = $( "input[name='supprimerJoueurFaitPartie']" ).prop('checked');
 
-  });
+      // Suppression des vieux messages
+      modalUserMessages.empty();
+
+      $.ajax({
+        url: 'Suppression',
+        type: "POST",
+        dataType: 'json',
+        data: ({
+          id : id,
+          token : token,
+          action : action,
+          supprimerJoueurParticipe : supprimerJoueurParticipe,
+          supprimerJoueurFaitPartie : supprimerJoueurFaitPartie
+        }),
+        success: function(response) {
+
+          if (response.status == "success") {
+            toastr[response.status](response.msg);
+            button.closest('tr').fadeOut();
+            modal.modal('hide');
+          } else {
+            afficherMessage(modalUserMessages, response.msg, response.status);
+          }
+
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          msg = "Status: " + textStatus + "<br>Error: " + errorThrown;
+          afficherMessage(modalUserMessages, msg, "danger");
+        }
+      });
+    });
+
+    function afficherMessage(parent, msg, type) {
+      parent.append($("<div/>", {class : 'alert alert-danger', role : 'alert'})
+                      .append($("<span/>", {class : 'glyphicon glyphicon-exclamation-sign', 'aria-hidden' : true}))
+                      .append($("<span/>", {html : " " + msg}))
+      )
+    }
+
+    $(function () {
+
+      $('.listeJoueurs').dataTable({
+        "oLanguage": {
+          "sUrl": "resources/js/localization/datatable_fr.txt"
+        },
+        "aoColumnDefs": [
+          {"bSortable": false, "aTargets": [5]},
+        ],
+        "aoColumns": [
+          { "sWidth": "15%" },
+          { "sWidth": "20%" },
+          { "sWidth": "20%" },
+          { "sWidth": "17%" },
+          { "sWidth": "17%" },
+          { "sWidth": "11%" }
+        ],
+        "iDisplayLength": 10,
+        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
+      })
+
+    });
 </script>
 
 </body>

@@ -291,9 +291,8 @@ public class GestionLigue {
 
 		PreparedStatement preparedStatement = null;
 
-
-		String query = "insert into joueur (joueurid, joueurnom, joueurprenom)"
-				+ "values (?, ?, ?); ";
+		String query = "INSERT INTO joueur (joueurid, joueurnom, joueurprenom)"
+				+ "VALUES (?, ?, ?); ";
 
 		try {
 			preparedStatement = connexion.prepareStatement(query);
@@ -309,6 +308,7 @@ public class GestionLigue {
 			// fermeture de la connexion 
 			connexion.close();
 		}
+
 		if(equipeNom != null){
 			connexion = db.getConnection();
 
@@ -460,8 +460,12 @@ public class GestionLigue {
 					tupleJoueur = new TupleJoueur(
 							rs.getInt("JoueurId"),
 							rs.getInt("EquipeId"),
+							rs.getInt("numero"),
 							rs.getString("joueurNom"),
-							rs.getString("joueurPrenom")
+							rs.getString("joueurPrenom"),
+							rs.getString("EquipeNom"),
+							rs.getDate("DateDebut"),
+							rs.getDate("DateFin")
 					);
 
 					joueurs.add(tupleJoueur);
@@ -725,7 +729,7 @@ public class GestionLigue {
 	 * @throws SQLException Exception SQL
 	 */
 	public void creerMatch(Date MatchDate, java.util.Date MatchHeure,
-						   String EquipeNomLocal, String EquipeNomVisiteur) throws SQLException {
+						   String EquipeNomLocal, String EquipeNomVisiteur) throws SQLException, LigueException {
 
 		connexion = db.getConnection();
 
@@ -733,7 +737,7 @@ public class GestionLigue {
 
 		// Vé́rifier que les équipes existent et qu’ils sont différents
 		if (EquipeNomLocal.equals(EquipeNomVisiteur)) {
-			System.out.println("USERWARNING - Les équipes doivent être différentes.");
+			throw new LigueException("Les équipes doivent être différentes.");
 		} else {
 			PreparedStatement preparedStatementCheck = null;
 
@@ -1106,10 +1110,10 @@ public class GestionLigue {
 	 */
 	public void entrerResultatMatch(Date MatchDate, Timestamp MatchHeure,
 									String EquipeNomLocal, String EquipeNomVisiteur, int pointsLocal,
-									int PointsVisiteur) throws SQLException {
+									int PointsVisiteur) throws SQLException, LigueException {
 
 		if (pointsLocal < 0 || PointsVisiteur < 0) {
-			System.out.println("USERWARNING -  Les points soit toujours plus grands ou égal à zéro.");
+			System.out.println("USERWARNING -  Les scores doivent être > 0");
 		} else {
 			connexion = db.getConnection();
 
@@ -1162,7 +1166,7 @@ public class GestionLigue {
 					connexion.close();
 				}
 			} else {
-				System.out.printf("USERWARNING - Une erreur est survenue durant l'ajout des points.");
+				throw new LigueException("Aucun match ne correspond à votre requête.");
 			}
 		}
 	}
@@ -1253,17 +1257,19 @@ public class GestionLigue {
 		PreparedStatement preparedStatement = null;
 
 		String query = "SELECT m.matchid, b.arbitrePrenom || ' ' || b.arbitreNom AS arbitre, "
-				+ "pointslocal, pointsvisiteur, e1.equipeNom AS equipelocal, e2.equipeNom AS equipeVisiteur "
+				+ "pointslocal, pointsvisiteur, e1.equipeNom AS equipelocal, e2.equipeNom AS equipeVisiteur, "
+				+ "matchDate, to_char(matchHeure, 'HH24:MI:SS') AS matchheure, terrainnom "
 				+ "FROM match m "
 				+ "RIGHT JOIN arbitrer a ON a.matchid = m.matchid "
 				+ "LEFT JOIN arbitre b ON a.arbitreid = b.arbitreid "
 				+ "INNER JOIN equipe e1 ON e1.equipeid = m.equipelocal "
-				+ "INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur ";
+				+ "INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur "
+				+ "INNER JOIN terrain t ON t.terrainid = m.terrainid ";
 		if(aPartirDate != null){
 			query += "WHERE matchdate > ? ";
 		}
 		query += "GROUP BY m.matchid, b.arbitrePrenom, b.arbitreNom, pointslocal, pointsvisiteur, "
-				+ "e1.equipeNom, e2.equipeNom "
+				+ "e1.equipeNom, e2.equipeNom, terrainnom "
 				+ "ORDER BY m.matchid ";
 
 		try {
@@ -1285,7 +1291,10 @@ public class GestionLigue {
 							rs.getString("equipevisiteur"),
 							(rs.getString("pointslocal") != null ? rs.getString("pointslocal") : "À venir"),
 							(rs.getString("pointsvisiteur") != null ? rs.getString("pointsvisiteur") : "À venir"),
-							rs.getString("arbitre")
+							rs.getString("arbitre"),
+							rs.getDate("matchDate"),
+							rs.getString("matchHeure"),
+							rs.getString("terrainnom")
 					);
 
 					matchs.add(tupleMatch);
@@ -1294,7 +1303,7 @@ public class GestionLigue {
 			}
 		} catch (SQLException e) {
 			System.out.println(e);
-			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
+			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des matchs.");
 		} finally {
 			// fermeture de la connexion
 			connexion.close();

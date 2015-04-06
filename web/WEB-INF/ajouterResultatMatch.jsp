@@ -99,20 +99,20 @@
         <div class="form-group">
           <label for="pointsLocal" class="control-label col-xs-3">Points local </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="pointsLocal" name="pointsLocal" placeholder="Score de l'équipe locale">
+            <input type="text" class="form-control required number" id="pointsLocal" name="pointsLocal" placeholder="Score de l'équipe locale">
           </div>
         </div>
 
         <div class="form-group">
           <label for="pointsVisiteur" class="control-label col-xs-3">Points visiteur </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="pointsVisiteur" name="pointsVisiteur" placeholder="Score de l'équipe visiteur">
+            <input type="text" class="form-control required number" id="pointsVisiteur" name="pointsVisiteur" placeholder="Score de l'équipe visiteur">
           </div>
         </div>
 
         <div class="form-group">
           <div class="col-xs-offset-3 col-xs-9 text-right">
-            <button type="submit" name="ajouterResultatsMatch" class="btn btn-success">Soumettre</button>
+            <button type="submit" name="ajouterResultatMatch" class="btn btn-success">Soumettre</button>
           </div>
         </div>
       </form>

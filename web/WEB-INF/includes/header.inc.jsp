@@ -28,10 +28,10 @@
             <%--Joueurs--%>
             <li class="divider"></li>
             <li><a href="/Routes?page=ajouterJoueur">
-              <span class="text-warning">Ajouter un joueur</span>
+              <span class="text-success">Ajouter un joueur</span>
             </a></li>
             <li><a href="Joueurs">
-              <span class="text-warning">Liste de joueurs</span>
+              <span class="text-success">Liste de joueurs</span>
             </a></li>
             <li><a href="Joueurs">
               <span class="text-success
@@ -44,7 +44,7 @@
               <span class="text-success">Ajouter un match</span>
             </a></li>
             <li><a href="/Routes?page=ajouterResultatMatch">
-              <span class="text-warning">Entrer le résultat d’un match</span>
+              <span class="text-success">Entrer le résultat d’un match</span>
             </a></li>
             <li><a href="Matchs">
               <span class="text-warning">Résultats des matchs</span>

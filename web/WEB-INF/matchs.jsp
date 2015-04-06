@@ -39,10 +39,14 @@
       <thead>
       <tr>
         <th>N°</th>
+        <th>Date</th>
         <th>Local</th>
         <th>visiteur</th>
+        <th>Heure</th>
+        <th>Terrain</th>
         <th>Points Local</th>
         <th>Points Visiteur</th>
+        <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
       <tbody>
@@ -61,10 +65,19 @@
       %>
       <tr>
         <td><%= tupleMatch.idMatch %></td>
+        <td><%= tupleMatch.terrain %></td>
         <td><%= tupleMatch.equipeLocal %></td>
         <td><%= tupleMatch.equipeVisiteur %></td>
+        <td><%= tupleMatch.date %></td>
+        <td><%= tupleMatch.heure %></td>
         <td><%= tupleMatch.pointsLocal %></td>
         <td><%= tupleMatch.pointsVisiteur %></td>
+        <td>
+          <a class="nounderline" href="Routes?page=ajouterResultatMatch">
+            <span class="glyphicon glyphicon-stats"></span>
+            Score
+          </a>
+        </td>
       </tr>
       <%
         }
@@ -88,6 +101,9 @@
       "oLanguage": {
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
+      "aoColumnDefs": [
+        {"bSortable": false, "aTargets": [8]},
+      ],
       "iDisplayLength": 50,
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })

@@ -315,7 +315,7 @@ public class Main {
 		System.out.print("Équipe visiteur : ");
 		EquipeNomVisiteur = scanner.next();
 
-		inventaireManager.creerMatch(MatchDate, MatchHeure, EquipeNomLocal, EquipeNomVisiteur);
+		//inventaireManager.creerMatch(MatchDate, MatchHeure, EquipeNomLocal, EquipeNomVisiteur);
 	}
 
 	public void creerArbitre() throws SQLException {
@@ -433,8 +433,8 @@ public class Main {
 		System.out.println("Entrez les points des visiteurs : ");
 		PointsVisiteur = scanner.nextInt();
 
-		inventaireManager.entrerResultatMatch(MatchDate, MatchHeure, 
-				EquipeNomLocal, EquipeNomVisiteur, pointsLocal, PointsVisiteur);
+		/*inventaireManager.entrerResultatMatch(MatchDate, MatchHeure,
+				EquipeNomLocal, EquipeNomVisiteur, pointsLocal, PointsVisiteur);*/
 	}
 
 	public void afficherResultatsDate() throws SQLException {

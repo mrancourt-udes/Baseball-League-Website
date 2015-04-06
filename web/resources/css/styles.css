@@ -16,12 +16,12 @@
     opacity: .5;
 }
 
-.jumbotron {
+/*.jumbotron {
     background-color: #96b866;
     background-repeat: no-repeat;
     background-position: center;
     background-image: url("../img/background.png");
-}
+}*/
 
 .clear {
     clear: both;
@@ -29,4 +29,10 @@
 
 .margT40 {
     margin-top: 40px;
+}
+
+.jumbotron {
+    text-shadow: #2a2a2a 0 1px 1px;
+    background: url("../img/background.png") no-repeat center center;
+    text-align: center;
 }

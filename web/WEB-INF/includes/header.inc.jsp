@@ -20,10 +20,10 @@
             <li><a href="/Routes?page=ajouterEquipe">
               <span class="text-success">Ajouter une équipe</span>
             </a></li>
-            <li><a href="Equipes">
+            <li><a href="/Routes?page=equipes">
               <span class="text-success">Liste des équipes</span>
             </a></li>
-            <li><a href="Equipes">
+            <li><a href="/Routes?page=equipes">
               <span class="text-success">Supprimer une équipe</span>
             </a></li>
 
@@ -32,10 +32,10 @@
             <li><a href="/Routes?page=ajouterJoueur">
               <span class="text-success">Ajouter un joueur</span>
             </a></li>
-            <li><a href="Joueurs">
+            <li><a href="/Routes?page=joueurs">
               <span class="text-success">Liste de joueurs</span>
             </a></li>
-            <li><a href="Joueurs">
+            <li><a href="/Routes?page=joueurs">
               <span class="text-success
               ">Supprimer un joueur</span>
             </a></li>
@@ -48,7 +48,7 @@
             <li><a href="/Routes?page=ajouterResultatMatch">
               <span class="text-success">Entrer le résultat d’un match</span>
             </a></li>
-            <li><a href="Matchs">
+            <li><a href="/Routes?page=matchs">
               <span class="text-warning">Résultats des matchs</span>
             </a></li>
 
@@ -57,7 +57,7 @@
             <li><a href="/Routes?page=ajouterArbitre">
               <span class="text-success">Ajouter un arbitre</span>
             </a></li>
-            <li><a href="Arbitres">
+            <li><a href="/Routes?page=arbitres">
               <span class="text-success">Liste de arbitres</span>
             </a></li>
             <li><a href="/Routes?page=affecterArbitres">

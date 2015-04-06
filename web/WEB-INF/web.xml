@@ -18,22 +18,6 @@
         <servlet-class>ligueBaseballServlet.FormHandler</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Equipes</servlet-name>
-        <servlet-class>ligueBaseballServlet.Equipes</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Joueurs</servlet-name>
-        <servlet-class>ligueBaseballServlet.Joueurs</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Arbitres</servlet-name>
-        <servlet-class>ligueBaseballServlet.Arbitres</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Matchs</servlet-name>
-        <servlet-class>ligueBaseballServlet.Matchs</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>ligueBaseballServlet.Login</servlet-class>
     </servlet>
@@ -56,22 +40,6 @@
     <servlet-mapping>
         <servlet-name>FormHandler</servlet-name>
         <url-pattern>/FormHandler</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Equipes</servlet-name>
-        <url-pattern>/Equipes</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Joueurs</servlet-name>
-        <url-pattern>/Joueurs</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Arbitres</servlet-name>
-        <url-pattern>/Arbitres</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Matchs</servlet-name>
-        <url-pattern>/Matchs</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>

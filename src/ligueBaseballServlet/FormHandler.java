@@ -1,6 +1,5 @@
 package ligueBaseballServlet;
 
-import com.sun.tools.corba.se.idl.InterfaceGen;
 import ligueBaseball.GestionLigue;
 import ligueBaseball.LigueException;
 
@@ -205,8 +204,6 @@ public class FormHandler extends HttpServlet {
             String equipe;
             String terrain;
             String adresse = "";
-
-            System.out.println(request.getParameter("terrain"));
 
             if (request.getParameter("equipe") == null) {
                 throw new LigueException("Veuillez entrer un nom d'équipe");
@@ -489,8 +486,6 @@ public class FormHandler extends HttpServlet {
                     throw new LigueException("Le nombre maximale d'arbitre est de 4.");
                 }
             }
-
-            System.out.println(arbitres.length);
 
             GestionLigue gestionLigue = new GestionLigue();
 

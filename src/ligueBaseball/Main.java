@@ -380,8 +380,8 @@ public class Main {
 				System.out.println("Please enter a valid time!");
 			}
 		}
-		inventaireManager.arbitrerMatch(MatchDate, MatchHeure, EquipeNomLocal, 
-				EquipeNomVisiteur, ArbitreNom, ArbitrePrenom);
+		/*inventaireManager.arbitrerMatch(MatchDate, MatchHeure, EquipeNomLocal,
+				EquipeNomVisiteur, ArbitreNom, ArbitrePrenom);*/
 	}
 
 

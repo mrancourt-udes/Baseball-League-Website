@@ -59,7 +59,7 @@
               <span class="text-success">Liste de arbitres</span>
             </a></li>
             <li><a href="/Routes?page=affecterArbitres">
-              <span class="text-warning">Affecter des arbitres à un match</span>
+              <span class="text-success">Affecter des arbitres à un match</span>
             </a></li>
 
           </ul>

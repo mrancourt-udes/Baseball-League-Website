@@ -47,6 +47,9 @@ public class FormHandler extends HttpServlet {
         else if (request.getParameter("ajouterResultatMatch") != null) {
             traiterAjoutResultatMatch(request, response);
         }
+        else if (request.getParameter("affecterArbitres") != null) {
+            traiterAffecterArbitres(request, response);
+        }
 
         else {
             List listeMessageErreur = new LinkedList();
@@ -423,6 +426,99 @@ public class FormHandler extends HttpServlet {
 
             RequestDispatcher dispatcher = request
                     .getRequestDispatcher("/WEB-INF/ajouterResultatMatch.jsp");
+            dispatcher.forward(request, response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e
+                    .toString());
+        }
+    }
+
+    public void traiterAffecterArbitres(HttpServletRequest request,
+                                          HttpServletResponse response) throws ServletException, IOException {
+        try {
+
+            java.sql.Date matchDate;
+            Timestamp matchHeure;
+            String nomEquipeLocale;
+            String nomEquipeVisiteur;
+            String[] arbitres;
+
+            if (request.getParameter("matchDate") == null) {
+                throw new LigueException("Veuillez entrer la date du match");
+            } else {
+                try {
+                    DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    Date tmpDate = df.parse(request.getParameter("matchDate"));
+                    matchDate = new java.sql.Date(tmpDate.getTime());
+                } catch (ParseException e) {
+                    throw new LigueException("Veuillez entrer une heure de match valide");
+                }
+            }
+            if (request.getParameter("matchHeure") == null) {
+                throw new LigueException("Veuillez entrer l'heure du match");
+            } else {
+                try {
+                    DateFormat tf = new SimpleDateFormat("hh:mm");
+                    Date tmpHeure = tf.parse(request.getParameter("matchHeure"));
+                    matchHeure = new Timestamp(tmpHeure.getTime());
+                } catch (ParseException e) {
+                    throw new LigueException("Veuillez entrer une heure de match valide");
+                }
+            }
+            if (request.getParameter("equipeLocale") == null) {
+                throw new LigueException("Veuillez sélectionner l'équipe locale");
+            } else {
+                nomEquipeLocale = request.getParameter("equipeLocale");
+            }
+            if (request.getParameter("equipeVisiteur") == null) {
+                throw new LigueException("Veuillez sélectionner l'équipe visiteur");
+            } else {
+                nomEquipeVisiteur = request.getParameter("equipeVisiteur");
+            }
+            if (request.getParameter("arbitres") == null) {
+                throw new LigueException("Veuillez sélectionne au moins un arbitre");
+            } else {
+                arbitres = request.getParameterValues("arbitres");
+
+                if (arbitres.length == 0) {
+                    throw new LigueException("Veuillez sélectionne au moins un arbitre");
+                } else if (arbitres.length > 4) {
+                    throw new LigueException("Le nombre maximale d'arbitre est de 4.");
+                }
+            }
+
+            System.out.println(arbitres.length);
+
+            GestionLigue gestionLigue = new GestionLigue();
+
+            // exécuter la transaction
+            synchronized (gestionLigue) {
+                gestionLigue.arbitrerMatch(matchDate, matchHeure, nomEquipeLocale,
+                        nomEquipeVisiteur, arbitres);
+            }
+
+            List listeMessageSucces = new LinkedList();
+            listeMessageSucces.add("Les arbitres ont étés affectés au match avec succès!");
+
+            request.setAttribute("listeMessageSucces", listeMessageSucces);
+
+            HttpSession session = request.getSession(false);
+            //save message in session
+            session.setAttribute("listeMessageSucces", listeMessageSucces);
+            response.sendRedirect("Routes?page=matchs");
+
+        } catch (LigueException e) {
+
+            List listeMessageErreur = new LinkedList();
+            listeMessageErreur.add(e.toString());
+
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+
+            RequestDispatcher dispatcher = request
+                    .getRequestDispatcher("/WEB-INF/affecterArbitres.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {

@@ -1008,7 +1008,7 @@ public class GestionLigue {
 	 * quatre arbitres, il faut les compter.
 	 * @throws SQLException Exception SQL
 	 */
-	public void arbitrerMatch(Date  MatchDate, Timestamp MatchHeure,
+	/*public void arbitrerMatch(Date  MatchDate, Timestamp MatchHeure,
 							  String EquipeNomLocal, String EquipeNomVisiteur, String ArbitreNom,
 							  String ArbitrePrenom) throws SQLException {
 
@@ -1098,6 +1098,117 @@ public class GestionLigue {
 		else{
 			System.out.printf("Ce match n'existe pas");
 		}
+	}*/
+
+	/**
+	 * 10.arbitrerMatch <MatchDate> <MatchHeure> <EquipeNomLocal>
+	 * <EquipeNomVisiteur> <ArbitreNom> <ArbitrePrenom>
+	 * Affecter des arbitres à un match. Valider que le match existe, ainsi que
+	 * les <ArbitreNom> <ArbitrePrenom>. Un match peut avoir un maximum de
+	 * quatre arbitres, il faut les compter.
+	 * @throws SQLException Exception SQL
+	 */
+	public void arbitrerMatch(Date  MatchDate, Timestamp MatchHeure,
+							  String EquipeNomLocal, String EquipeNomVisiteur,
+							  String[] arbitres) throws SQLException, LigueException {
+
+		connexion = db.getConnection();
+
+		String queryCheck = "SELECT "
+				+ "EXISTS (SELECT * FROM match "
+				+ "JOIN equipe AS equipeL ON equipeL.equipeid = equipeLocal "
+				+ "JOIN equipe AS equipeV ON equipeV.equipeid = equipevisiteur "
+				+ "WHERE matchDate = ? "
+				+ "AND matchHeure = ? "
+				+ "AND equipeL.equipeNom = ? "
+				+ "AND equipeV.equipenom = ?) "
+				+ "AS matchExists";
+
+		PreparedStatement preparedStatementCheck = connexion.prepareStatement(queryCheck);
+		preparedStatementCheck.setDate(1, MatchDate);
+		preparedStatementCheck.setTimestamp(2, MatchHeure);
+		preparedStatementCheck.setString(3, EquipeNomLocal);
+		preparedStatementCheck.setString(4, EquipeNomVisiteur);
+
+		ResultSet rs = preparedStatementCheck.executeQuery();
+		rs.next();
+
+
+		if(rs.getBoolean("matchExists")) {
+
+			for (int i = 0; i < arbitres.length; i++) {
+
+				String queryCheck1 = "SELECT EXISTS (SELECT * FROM arbitre WHERE arbitreid = ? ) AS arbitreExists";
+
+				PreparedStatement preparedStatementCheck1 = connexion.prepareStatement(queryCheck1) ;
+				preparedStatementCheck1.setInt(1, Integer.parseInt(arbitres[i]));
+
+				rs = preparedStatementCheck1.executeQuery();
+				rs.next();
+
+				if(rs.getBoolean("arbitreExists")){
+					String queryNbArbitres = "SELECT count(matchid) AS nbArbitres FROM arbitrer GROUP BY matchid";
+					PreparedStatement preparedStatementNbArbitres = connexion.prepareStatement(queryNbArbitres);
+					rs = preparedStatementNbArbitres.executeQuery();
+					rs.next();
+					int nbArbitres = rs.getInt("nbArbitres");
+
+					if(nbArbitres < 4){
+
+						String queryArbitre = "SELECT arbitreid FROM arbitre WHERE arbitreid = ? ";
+						String queryMatch = "SELECT matchid FROM match JOIN equipe ON equipeLocal = equipeid "
+								+ "WHERE matchDate = ? AND matchHeure = ? AND equipeNom = ?";
+
+						PreparedStatement preparedStatementArbitre = connexion.prepareStatement(queryArbitre);
+						preparedStatementArbitre.setInt(1, Integer.parseInt(arbitres[i]));
+
+						PreparedStatement preparedStatementMatch = connexion.prepareStatement(queryMatch);
+						preparedStatementMatch.setDate(1, MatchDate);
+						preparedStatementMatch.setTimestamp(2, MatchHeure);
+						preparedStatementMatch.setString(3, EquipeNomLocal);
+
+						rs = preparedStatementArbitre.executeQuery();
+						rs.next();
+
+						int arbitreid = rs.getInt("arbitreid");
+
+						rs = preparedStatementMatch.executeQuery();
+						rs.next();
+
+						int matchid = rs.getInt("matchid");
+
+						String query = "INSERT INTO arbitrer "
+								+ "VALUES (?, ?)";
+
+						try {
+							PreparedStatement preparedStatement = connexion.prepareStatement(query);
+
+							preparedStatement.setInt(1, arbitreid);
+							preparedStatement.setInt(2, matchid);
+
+							preparedStatement.executeUpdate();
+							connexion.commit();
+
+						} catch (SQLException e) {
+							System.out.println("USERWARNING - Une erreur est survenue dans l'association d'un arbitre avec un match");
+							connexion.rollback();
+						}
+					}
+				}
+				else {
+					throw new LigueException("Cet arbitre n'existe pas");
+				}
+			}
+		}
+		else {
+			throw new LigueException("Aucun match ne correspond à votre requête.");
+		}
+
+
+		// fermeture de la connexion
+		connexion.close();
+
+
 	}
 
 

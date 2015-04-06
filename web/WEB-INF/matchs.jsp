@@ -28,6 +28,14 @@
 
 <div class="container">
 
+  <div class="alert alert-danger" role="alert">
+    <h3>TODOs</h3>
+    <ul>
+      <li>Fixer les doublons</li>
+      <li>Ajouter les arbitres</li>
+    </ul>
+  </div>
+
   <div class="row">
     <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
     <jsp:include page="/WEB-INF/messageErreur.jsp" />
@@ -39,18 +47,17 @@
       <thead>
       <tr>
         <th>N°</th>
-        <th>Date</th>
         <th>Local</th>
         <th>visiteur</th>
-        <th>Heure</th>
         <th>Terrain</th>
+        <th>Date</th>
+        <th>Heure</th>
         <th>Points Local</th>
         <th>Points Visiteur</th>
         <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
       <tbody>
-
 
       <%
         GestionLigue gestionLigue = new GestionLigue();
@@ -65,9 +72,9 @@
       %>
       <tr>
         <td><%= tupleMatch.idMatch %></td>
-        <td><%= tupleMatch.terrain %></td>
         <td><%= tupleMatch.equipeLocal %></td>
         <td><%= tupleMatch.equipeVisiteur %></td>
+        <td><%= tupleMatch.terrain %></td>
         <td><%= tupleMatch.date %></td>
         <td><%= tupleMatch.heure %></td>
         <td><%= tupleMatch.pointsLocal %></td>

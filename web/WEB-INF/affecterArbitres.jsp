@@ -61,6 +61,7 @@
           <label for="equipeLocale" class="control-label col-xs-3">Équipe local </label>
           <div class="col-xs-9">
             <select class="form-control required" name="equipeLocale" id="equipeLocale">
+              <option value="" disabled="disabled" selected="selected" >Choisissez</option>
               <%
                 if ( !equipes.isEmpty() ) {
                   ListIterator it = equipes.listIterator();
@@ -81,6 +82,7 @@
           <label for="equipeVisiteur" class="control-label col-xs-3">Équipe visiteur </label>
           <div class="col-xs-9">
             <select class="form-control required" name="equipeVisiteur" id="equipeVisiteur">
+              <option value="" disabled="disabled" selected="selected" >Choisissez</option>
               <%
                 if ( !equipes.isEmpty() ) {
                   ListIterator it = equipes.listIterator();
@@ -110,7 +112,7 @@
             </label>
             <div class="col-xs-9">
               <div class="input-group">
-                <select class="form-control" data-bind="attr: { id: 'arbitre_' + $index(), name: 'arbitre_' + $index(), css: $index() == 0 ? 'required' : '' }">
+                <select class="form-control" name="arbitres" data-bind="attr: {css: $index() == 0 ? 'required' : '' }">
                   <option value="" disabled="disabled" selected="selected">Choisissez</option>
                   <%
                     if ( !equipes.isEmpty() ) {
@@ -149,6 +151,19 @@
 </div> <!-- /container -->
 
 <script>
+
+  $('#matchDate').datepicker({
+    todayHighlight: true,
+    weekStart: 0,
+    language : 'fr',
+    startView : 'decade',
+    format : 'dd-mm-yyyy'
+  });
+
+  $('#matchHeure').timepicker({
+    showMeridian : false
+  });
+
   $('form').validate({
     highlight: function(element) {
       $(element).closest('.form-group').addClass('has-error');

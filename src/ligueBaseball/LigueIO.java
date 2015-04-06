@@ -74,8 +74,6 @@ public class LigueIO {
             ));
         }
 
-        System.out.print(joueurs);
-
         gestionLigue.insererEquipe(joueurs);
 
     }

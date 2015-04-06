@@ -1,10 +1,8 @@
 <%@ page import="ligueBaseball.GestionLigue" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ListIterator" %>
-<%@ page import="ligueBaseball.TupleEquipe" %>
 <%@ page import="ligueBaseball.TupleArbitre" %>
 <%@ page import="java.security.MessageDigest" %>
-<%@ page import="java.security.DigestException" %>
 <%@ page import="javax.xml.bind.annotation.adapters.HexBinaryAdapter" %>
 <%--
   Created by IntelliJ IDEA.

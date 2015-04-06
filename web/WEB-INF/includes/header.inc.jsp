@@ -11,7 +11,9 @@
       <a class="navbar-brand" href="/Routes?page=accueil">Ligue de Baseball</a>
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="/Routes?page=accueil" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Menu <span class="caret"></span></a>
+          <a href="/Routes?page=accueil" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <span class="glyphicon glyphicon glyphicon-menu-hamburger"></span>
+            Menu <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
 
             <%--Equipe--%>
@@ -65,7 +67,9 @@
           </ul>
 
         </li>
-        <li><a href="Logout">Sortir</a></li>
+        <li><a href="Logout">
+          <span class="glyphicon glyphicon-log-out"></span>
+          Sortir</a></li>
       </ul>
     </div>
     <div id="navbar" class="navbar-collapse collapse">

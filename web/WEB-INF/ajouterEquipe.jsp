@@ -1,8 +1,6 @@
 <%@ page import="ligueBaseball.GestionLigue" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ListIterator" %>
-<%@ page import="ligueBaseball.TupleEquipe" %>
-<%@ page import="ligueBaseball.TupleArbitre" %>
 <%@ page import="ligueBaseball.TupleTerrain" %>
 <%--
   Created by IntelliJ IDEA.

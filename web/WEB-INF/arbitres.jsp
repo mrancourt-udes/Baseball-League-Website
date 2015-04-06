@@ -142,7 +142,7 @@
         { "sWidth": "20%" },
         { "sWidth": "10%" }
       ],
-      "iDisplayLength": 50,
+      "iDisplayLength": 10,
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

@@ -103,8 +103,8 @@
       "aoColumnDefs": [
         {"bSortable": false, "aTargets": [8]},
       ],
-      "iDisplayLength": 50,
-      "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
+      "iDisplayLength": 5,
+      "aLengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Tous"]]
     })
 
   });

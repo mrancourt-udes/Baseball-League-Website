@@ -56,3 +56,5 @@
     cursor: inherit;
     display: block;
 }
+
+.tooltip > .tooltip-inner {background-color: #494949;}

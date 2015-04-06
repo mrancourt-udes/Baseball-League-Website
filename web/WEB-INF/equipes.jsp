@@ -44,6 +44,9 @@
       <tr>
         <th>N°</th>
         <th>Équipe</th>
+        <th>Terrain</th>
+        <th>Nombre de joueurs</th>
+        <th>Joueurs</th>
         <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
@@ -60,14 +63,19 @@
       <tr>
         <td><%= tupleEquipe.idEquipe %></td>
         <td><%= tupleEquipe.nomEquipe %></td>
+        <td><%= tupleEquipe.terrain %></td>
+        <td><%= tupleEquipe.nbJoueurs %></td>
+        <td><%= tupleEquipe.joueursStr == null ? "—" : tupleEquipe.joueursStr %></td>
         <td>
 
           <%
             // Generation du token
             String token = (hexAdapter).marshal(md.digest(Integer.toString(tupleEquipe.idEquipe).getBytes()));
-          %>
 
-          <a class="nounderline" href="javascript:;"
+            if (tupleEquipe.joueursStr == null ) {
+          %>
+          <a class="nounderline"
+             href="javascript:;"
              data-toggle="modal" data-target="#suppressionModal"
              data-suppressionitem="<%= tupleEquipe.nomEquipe %>"
              data-id="<%= tupleEquipe.idEquipe %>"
@@ -76,6 +84,21 @@
             <span class="glyphicon glyphicon-trash"></span>
             Supprimer
           </a>
+          <%
+          } else {
+          %>
+          <span class="disabled" style="color: #8a8a8a;"
+                data-toggle="tooltip" data-placement="top"
+                title="Impossible de supprimer l'équipe. Veuillez vous assurer qu'aucun joueur n'en fait partie.">
+          <span class="glyphicon glyphicon-trash"></span>
+          Supprimer
+          </span>
+
+          <%
+            }
+
+          %>
+
         </td>
       </tr>
       <%
@@ -118,6 +141,11 @@
 <script src="/resources/js/suppression.js"></script>
 
 <script>
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
   $(function () {
     $('#listeEquipes').dataTable({
       "oLanguage": {
@@ -127,7 +155,7 @@
         {"bSortable": false, "aTargets": [2]},
         {"width": "90px", "aTargets": [2]}
       ],
-      "iDisplayLength": 50,
+      "iDisplayLength": 10,
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

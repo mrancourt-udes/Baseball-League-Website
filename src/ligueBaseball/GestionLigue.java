@@ -126,10 +126,30 @@ public class GestionLigue {
 		List<TupleEquipe> equipes = new LinkedList<>();
 
 		PreparedStatement preparedStatement = null;
-		String query =
+		/*String query =
 				"SELECT EquipeId, EquipeNom "
 						+ "FROM equipe "
-						+ "ORDER BY EquipeNom";
+						+ "ORDER BY EquipeNom";*/
+		String query =
+				"SELECT e.equipeid, e.equipenom, t.terrainnom, " +
+						"  (SELECT COUNT(j.joueurid) AS \"nbJoueurs\" " +
+						"   FROM joueur j " +
+						"     INNER JOIN faitpartie fp " +
+						"       ON j.joueurid = fp.joueurid " +
+						"   WHERE equipeid = e.equipeid), " +
+						"          (SELECT string_agg(joueurPrenom || ' ' || joueurNom, '<br>') " +
+						"           FROM joueur j " +
+						"             INNER JOIN faitpartie fp2 " +
+						"               ON fp2.joueurid = j.joueurid " +
+						"           WHERE fp2.equipeid = fpl.equipeid " +
+						"          ) AS \"joueurs\" " +
+						"FROM equipe e " +
+						"  LEFT JOIN faitpartie fpl " +
+						"    ON e.equipeid = fpl.equipeid " +
+						"  LEFT JOIN terrain t " +
+						"    ON e.terrainid = t.terrainid " +
+						"GROUP BY e.equipeid, fpl.equipeid, t.terrainid " +
+						"ORDER BY e.equipeid;";
 
 		try {
 			preparedStatement = connexion.prepareStatement(query);
@@ -141,7 +161,10 @@ public class GestionLigue {
 
 					tupleEquipe = new TupleEquipe(
 							rs.getInt("EquipeId"),
-							rs.getString("EquipeNom")
+							rs.getString("EquipeNom"),
+							rs.getString("terrainNom"),
+							rs.getString("nbJoueurs"),
+							rs.getString("joueurs")
 					);
 
 					equipes.add(tupleEquipe);
@@ -149,6 +172,7 @@ public class GestionLigue {
 			}
 
 		} catch (SQLException e) {
+			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
 		} finally {
 			// fermeture de la connexion
@@ -1230,7 +1254,7 @@ public class GestionLigue {
 		}
 		query += "GROUP BY m.matchid, pointslocal, pointsvisiteur, "
 				+ "e1.equipeNom, e2.equipeNom, terrainnom "
-				+ "ORDER BY m.matchid ";
+				+ "ORDER BY m.matchDate ";
 
 		try {
 

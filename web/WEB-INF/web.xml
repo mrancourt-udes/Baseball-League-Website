@@ -33,6 +33,10 @@
         <servlet-name>Upload</servlet-name>
         <servlet-class>ligueBaseball.Upload</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Export</servlet-name>
+        <servlet-class>ligueBaseballServlet.Export</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Routes</servlet-name>
         <url-pattern>/Routes</url-pattern>
@@ -48,6 +52,10 @@
     <servlet-mapping>
         <servlet-name>Upload</servlet-name>
         <url-pattern>/Upload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Export</servlet-name>
+        <url-pattern>/Export</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>

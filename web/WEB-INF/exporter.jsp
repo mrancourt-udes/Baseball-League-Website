@@ -36,11 +36,11 @@
 
     <div class="col-md-6 col-md-offset-3">
 
-      <form class="form-horizontal" action="Upload" method="post" enctype="multipart/form-data">
+      <form class="form-horizontal" action="Export" method="post">
         <div class="form-group">
-          <label for="equipe" class="control-label col-xs-3">Équipe </label>
+          <label for="equipeId" class="control-label col-xs-3">Équipe </label>
           <div class="col-xs-9">
-            <select class="form-control required" name="equipe" id="equipe">
+            <select class="form-control required" name="equipeId" id="equipeId">
               <option value="" disabled="disabled" selected="selected" >Choisissez l'équipe à exporter</option>
               <%
                 GestionLigue gestionLigue = new GestionLigue();
@@ -62,7 +62,7 @@
         </div>
         <div class="form-group">
           <div class="col-xs-offset-3 col-xs-9 text-right">
-            <button type="submit" name="ajouterArbitre" class="btn btn-success">
+            <button type="submit" name="exporter" class="btn btn-success">
               Exporter <span class="glyphicon glyphicon-export" aria-hidden="true"></span> </button>
           </div>
         </div>

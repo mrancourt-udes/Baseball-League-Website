@@ -78,7 +78,14 @@ public class LigueIO {
 
     }
 
-    public void exporter() {
+    public void exporter(int equipeId) {
+
+        // Recuperer la liste de joueur
+
+        // Sauvegarder le fichier dans le dossier XML
+
+        // Forcer le download du fichier par le browser
+
 
     }
 

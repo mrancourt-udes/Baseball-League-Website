@@ -1250,7 +1250,7 @@ public class GestionLigue {
 				"INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur " +
 				"INNER JOIN terrain t ON t.terrainid = m.terrainid ";
 		if(aPartirDate != null){
-			query += "WHERE matchdate > ? ";
+			query += "WHERE matchdate >= ? ";
 		}
 		query += "GROUP BY m.matchid, pointslocal, pointsvisiteur, "
 				+ "e1.equipeNom, e2.equipeNom, terrainnom "

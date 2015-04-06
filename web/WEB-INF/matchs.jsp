@@ -2,6 +2,9 @@
 <%@ page import="ligueBaseball.TupleMatch" %>
 <%@ page import="java.util.List" %>
 <%@ page import="ligueBaseball.GestionLigue" %>
+<%@ page import="java.sql.Date" %>
+<%@ page import="java.text.DateFormat" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -28,10 +31,40 @@
 
 <div class="container">
 
-    <div class="row">
+  <div class="row">
     <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
     <jsp:include page="/WEB-INF/messageErreur.jsp" />
   </div>
+
+  <%
+    Date aPartirDe = null;
+    String aPartirDeStr = null;
+
+    if (session.getAttribute("aPartirDe") != null) {
+      aPartirDe = (Date) session.getAttribute("aPartirDe");
+      aPartirDeStr = new SimpleDateFormat("dd-MM-yyyy").format(aPartirDe).toString();
+      session.removeAttribute("aPartirDe");
+    }
+  %>
+
+  <div class="row">
+    <form class="navbar-form navbar-right" role="form" action="FormHandler" method="post">
+      <%
+        if (aPartirDeStr != null) {
+      %>
+      <a href="Routes?page=matchs" class="btn btn-default glyphicon glyphicon-ban-circle"></a>
+      <%
+        }
+      %>
+      <div class="form-group">
+        <input name="aPartirDe" id="aPartirDe" type="text" placeholder="À partir du"
+          <%= aPartirDeStr != null ? "value='"+aPartirDeStr+"'" : "" %> class="form-control">
+      </div>
+      <button type="submit" name="filtrerMatchDate" class="btn btn-success">Filtrer</button>
+    </form>
+  </div>
+
+  <div class="break margT40"></div>
 
   <!-- Example row of columns -->
   <div class="row">
@@ -52,8 +85,9 @@
       <tbody>
 
       <%
+
         GestionLigue gestionLigue = new GestionLigue();
-        List matchs = gestionLigue.getResultatsDate(null);
+        List matchs = gestionLigue.getResultatsDate(aPartirDe);
 
         if ( !matchs.isEmpty() ) {
 
@@ -94,6 +128,15 @@
 </div> <!-- /container -->
 
 <script>
+
+  $('#aPartirDe').datepicker({
+    todayHighlight: true,
+    weekStart: 0,
+    language : 'fr',
+    startView : 'decade',
+    format : 'dd-mm-yyyy'
+  });
+
   $(function () {
 
     $('#listeMatchs').dataTable({

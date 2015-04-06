@@ -49,6 +49,9 @@ public class FormHandler extends HttpServlet {
         else if (request.getParameter("affecterArbitres") != null) {
             traiterAffecterArbitres(request, response);
         }
+        else if (request.getParameter("filtrerMatchDate") != null) {
+            traiterFiltrerMatchDate(request, response);
+        }
 
         else {
             List listeMessageErreur = new LinkedList();
@@ -90,7 +93,7 @@ public class FormHandler extends HttpServlet {
                 throw new LigueException("Veuillez entrer le numero du joueur");
             } else {
                 try {
-                numero = Integer.parseInt(request.getParameter("numero"));
+                    numero = Integer.parseInt(request.getParameter("numero"));
                 } catch (NumberFormatException e) {
                     throw new LigueException("Veuillez entrer un numéro de joueur valide");
                 }
@@ -434,7 +437,7 @@ public class FormHandler extends HttpServlet {
     }
 
     public void traiterAffecterArbitres(HttpServletRequest request,
-                                          HttpServletResponse response) throws ServletException, IOException {
+                                        HttpServletResponse response) throws ServletException, IOException {
         try {
 
             java.sql.Date matchDate;
@@ -522,6 +525,50 @@ public class FormHandler extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e
                     .toString());
         }
+    }
+
+    public void traiterFiltrerMatchDate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+
+        try {
+
+            Date aPartirDe;
+
+            if (request.getParameter("aPartirDe") == null) {
+                throw new LigueException("Veuillez entrer la date du match");
+            } else {
+                try {
+                    DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    Date tmpDate = df.parse(request.getParameter("aPartirDe"));
+                    aPartirDe = new java.sql.Date(tmpDate.getTime());
+                } catch (ParseException e) {
+                    throw new LigueException("Veuiller indiquer à partir de quel date vous voulez afficher les matchs.");
+                }
+            }
+
+            HttpSession session = request.getSession(false);
+            // sauvegarde du message dans la session
+            session.setAttribute("aPartirDe", aPartirDe);
+            response.sendRedirect("Routes?page=matchs");
+
+        } catch (LigueException e) {
+
+            List listeMessageErreur = new LinkedList();
+            listeMessageErreur.add(e.toString());
+
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+
+            RequestDispatcher dispatcher = request
+                    .getRequestDispatcher("/WEB-INF/matchs.jsp");
+            dispatcher.forward(request, response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e
+                    .toString());
+        }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

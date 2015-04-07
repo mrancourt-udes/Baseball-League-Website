@@ -60,6 +60,7 @@
           <label for="equipeLocale" class="control-label col-xs-3">Équipe local </label>
           <div class="col-xs-9">
             <select class="form-control required" name="equipeLocale" id="equipeLocale">
+              <option value="" disabled="disabled" selected="selected" >Choisissez l'équipe locale</option>
               <%
                 if ( !equipes.isEmpty() ) {
                   ListIterator it = equipes.listIterator();
@@ -80,6 +81,7 @@
           <label for="equipeVisiteur" class="control-label col-xs-3">Équipe visiteur </label>
           <div class="col-xs-9">
             <select class="form-control required" name="equipeVisiteur" id="equipeVisiteur">
+              <option value="" disabled="disabled" selected="selected" >Choisissez l'équipe visiteur</option>
               <%
                 if ( !equipes.isEmpty() ) {
                   ListIterator it = equipes.listIterator();

@@ -42,7 +42,7 @@
                         Parcourir… <input type="file" name="fichier" id="fichier">
                     </span>
                 </span>
-              <input type="text" class="form-control" readonly="" placeholder="Choisissez un fichier">
+              <input type="text" class="form-control required" disabled placeholder="Choisissez un fichier">
             </div>
           </div>
         </div>
@@ -76,23 +76,29 @@
     });
   });
 
-  $('form').validate({
-    highlight: function(element) {
-      $(element).closest('.form-group').addClass('has-error');
-    },
-    unhighlight: function(element) {
-      $(element).closest('.form-group').removeClass('has-error');
-    },
-    errorElement: 'span',
-    errorClass: 'help-block',
-    errorPlacement: function(error, element) {
-      if(element.parent('.input-group').length) {
-        error.insertAfter(element.parent());
-      } else {
-        error.insertAfter(element);
+  $(document).ready(function() {
+
+    $('form').validate({
+      ignore: [],
+      highlight: function(element) {
+        $(element).closest('.form-group').addClass('has-error');
+      },
+      unhighlight: function(element) {
+        $(element).closest('.form-group').removeClass('has-error');
+      },
+      errorElement: 'span',
+      errorClass: 'help-block',
+      errorPlacement: function(error, element) {
+        if(element.parent('.input-group').length) {
+          error.insertAfter(element.parent());
+        } else {
+          error.insertAfter(element);
+        }
       }
-    }
+    });
   });
+
+
 </script>
 
 </body>

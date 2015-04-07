@@ -19,11 +19,10 @@ public class Upload extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // location to store file uploaded
-    String uploadPath;
+    // dossier contenant les fichiers xml des equipes
     private static final String UPLOAD_DIRECTORY = "XML";
 
-    // upload settings
+    // parametres d'upload
     private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
     private static final int MAX_FILE_SIZE      = 1024 * 1024 * 40; // 40MB
     private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB
@@ -33,57 +32,55 @@ public class Upload extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // checks if the request actually contains upload file
+        // verification des fichiers uploades dans le formulaire
         if (!ServletFileUpload.isMultipartContent(request)) {
-            // if not, we stop here
+            // aucun fichier uploadé
             PrintWriter writer = response.getWriter();
             writer.println("Error: Form must has enctype=multipart/form-data.");
             writer.flush();
             return;
         }
 
-        // configures upload settings
+        // configuration des parametres d'upload
         DiskFileItemFactory factory = new DiskFileItemFactory();
-        // sets memory threshold - beyond which files are stored in disk
         factory.setSizeThreshold(MEMORY_THRESHOLD);
-        // sets temporary location to store files
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
 
         ServletFileUpload upload = new ServletFileUpload(factory);
 
-        // sets maximum size of upload file
         upload.setFileSizeMax(MAX_FILE_SIZE);
-
-        // sets maximum size of request (include file + form data)
         upload.setSizeMax(MAX_REQUEST_SIZE);
 
-        // constructs the directory path to store upload file
-        // this path is relative to application's directory
+        // recuperation du path de destination
         String uploadPath = request.getSession().getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
         uploadPath = uploadPath.replace("out/artifacts/tp4/", "");
 
-        // creates the directory if it does not exist
+        // creation du dossier si inexistant
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdir();
         }
 
         try {
-            // parses the request's content to extract file data
+            // extration des informations sur les fichiers uploades
             List<FileItem> formItems = upload.parseRequest(request);
 
             if (formItems != null && formItems.size() > 0) {
-                // iterates over form's fields
+                // parcours des champs
                 for (FileItem item : formItems) {
-                    // processes only fields that are not form fields
 
+                    // Sauvegarde du fichier s'il s'agit d'un type file
                     if (!item.isFormField()) {
 
                         String fileName = new File(item.getName()).getName();
                         String filePath = uploadPath + File.separator + fileName;
                         File storeFile = new File(filePath);
 
-                        // saves the file on disk
+                        if (fileName.isEmpty()) {
+                            throw new LigueException("Aucun fichier sélectionner. <br>Veuillez vous assurer de sélectionner le fichier XML de votre équipe.");
+                        }
+
+                        // sauvegarde du fichier sur le disque
                         item.write(storeFile);
 
                         LigueIO ligueIO = new LigueIO();
@@ -95,7 +92,8 @@ public class Upload extends HttpServlet {
                         request.setAttribute("listeMessageSucces", listeMessageSucces);
 
                         HttpSession session = request.getSession(false);
-                        //save message in session
+
+                        // sauvegarde du message dans la session
                         session.setAttribute("listeMessageSucces", listeMessageSucces);
                         response.sendRedirect("Routes?page=importer");
 

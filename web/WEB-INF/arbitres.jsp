@@ -48,6 +48,7 @@
         <th>N°</th>
         <th>Prénom</th>
         <th>Nom</th>
+        <th>Nombre de matchs</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -64,6 +65,7 @@
         <td><%= tupleArbitre.idArbitre %></td>
         <td><%= tupleArbitre.prenom %></td>
         <td><%= tupleArbitre.nom %></td>
+        <td><%= tupleArbitre.nbMatchs %></td>
         <td>
 
           <%
@@ -130,10 +132,17 @@
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
       "aoColumnDefs": [
-        {"bSortable": false, "aTargets": [3]},
-        {"width": "90px", "aTargets": [3]}
+        {"bSortable": false, "aTargets": [4]},
       ],
-      "iDisplayLength": 50,
+      "bAutoWidth": false, // Disable the auto width calculation
+      "aoColumns": [
+        { "sWidth": "10%" },
+        { "sWidth": "30%" },
+        { "sWidth": "30%" },
+        { "sWidth": "20%" },
+        { "sWidth": "10%" }
+      ],
+      "iDisplayLength": 10,
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

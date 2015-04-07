@@ -19,7 +19,7 @@ public class GestionLigue {
 	}
 
 	/**
-	 * Crée une nouvelle équipe. L’équipe est identifiée de manière unique par 
+	 * Crée une nouvelle équipe. L’équipe est identifiée de manière unique par
 	 * son EquipeId.
 	 * @param nomEquipe Nom de l'équipe à créer
 	 * @throws SQLException Exception SQL
@@ -71,7 +71,7 @@ public class GestionLigue {
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant la ceation de l'equipe.");
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}
@@ -114,7 +114,7 @@ public class GestionLigue {
 		} catch (SQLException e) {
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -126,10 +126,30 @@ public class GestionLigue {
 		List<TupleEquipe> equipes = new LinkedList<>();
 
 		PreparedStatement preparedStatement = null;
-		String query =
+		/*String query =
 				"SELECT EquipeId, EquipeNom "
 						+ "FROM equipe "
-						+ "ORDER BY EquipeNom";
+						+ "ORDER BY EquipeNom";*/
+		String query =
+				"SELECT e.equipeid, e.equipenom, t.terrainnom, " +
+						"  (SELECT COUNT(j.joueurid) AS \"nbJoueurs\" " +
+						"   FROM joueur j " +
+						"     INNER JOIN faitpartie fp " +
+						"       ON j.joueurid = fp.joueurid " +
+						"   WHERE equipeid = e.equipeid), " +
+						"          (SELECT string_agg(joueurPrenom || ' ' || joueurNom, '<br>') " +
+						"           FROM joueur j " +
+						"             INNER JOIN faitpartie fp2 " +
+						"               ON fp2.joueurid = j.joueurid " +
+						"           WHERE fp2.equipeid = fpl.equipeid " +
+						"          ) AS \"joueurs\" " +
+						"FROM equipe e " +
+						"  LEFT JOIN faitpartie fpl " +
+						"    ON e.equipeid = fpl.equipeid " +
+						"  LEFT JOIN terrain t " +
+						"    ON e.terrainid = t.terrainid " +
+						"GROUP BY e.equipeid, fpl.equipeid, t.terrainid " +
+						"ORDER BY e.equipeid;";
 
 		try {
 			preparedStatement = connexion.prepareStatement(query);
@@ -141,7 +161,10 @@ public class GestionLigue {
 
 					tupleEquipe = new TupleEquipe(
 							rs.getInt("EquipeId"),
-							rs.getString("EquipeNom")
+							rs.getString("EquipeNom"),
+							rs.getString("terrainNom"),
+							rs.getString("nbJoueurs"),
+							rs.getString("joueurs")
 					);
 
 					equipes.add(tupleEquipe);
@@ -149,6 +172,7 @@ public class GestionLigue {
 			}
 
 		} catch (SQLException e) {
+			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
 		} finally {
 			// fermeture de la connexion
@@ -264,11 +288,11 @@ public class GestionLigue {
 
 	/**
 	 * <JoueurNom> <JoueurPrenom> [<EquipeNom> <Numero> [<DateDebut>]]
-	 * Créer un nouveau joueur, le programme doit calculer le JoueurId, et 
-	 * l’utilisateur doit fournir le <JoueurNom> et le <JoueurPrenom> De manière 
-	 * optionnelle on peut donner les informations pour le joindre à une équipe. 
-	 * Si l’<EquipeNom > est donné il faut fournir le numéro du joueur dans 
-	 * cette équipe <Numero>. De manière optionnelle, on peut donner la 
+	 * Créer un nouveau joueur, le programme doit calculer le JoueurId, et
+	 * l’utilisateur doit fournir le <JoueurNom> et le <JoueurPrenom> De manière
+	 * optionnelle on peut donner les informations pour le joindre à une équipe.
+	 * Si l’<EquipeNom > est donné il faut fournir le numéro du joueur dans
+	 * cette équipe <Numero>. De manière optionnelle, on peut donner la
 	 * <DateDebut>.
 	 * @param nomJoueur Nom du joueur à créer
 	 * @param prenomJoueur Prénom du joueur à créer
@@ -304,7 +328,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la ceation d'un joueur.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 
@@ -336,16 +360,16 @@ public class GestionLigue {
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant l'assignation du joueur a une equipe.");
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}
 	}
 
 	/**
-	 * Afficher la liste de joueurs. Si le paramètre < EquipeNom > est fourni, 
-	 * le programme affiche seulement les joueurs de l’équipe correspondante. 
-	 * Si non, afficher tous les joueurs de toutes les équipes indiquant le nom 
+	 * Afficher la liste de joueurs. Si le paramètre < EquipeNom > est fourni,
+	 * le programme affiche seulement les joueurs de l’équipe correspondante.
+	 * Si non, afficher tous les joueurs de toutes les équipes indiquant le nom
 	 * de l’équipe.
 	 * @param EquipeNom Nom de l'équipe (Optionnel)
 	 * @throws SQLException
@@ -407,7 +431,7 @@ public class GestionLigue {
 		} catch (SQLException e) {
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -594,7 +618,7 @@ public class GestionLigue {
 					System.out.println("USERWARNING - Une erreur est survenue durant la suppression du joueur.");
 					connexion.rollback();
 				} finally {
-					// fermeture de la connexion 
+					// fermeture de la connexion
 					connexion.close();
 				}
 			} else {
@@ -648,7 +672,7 @@ public class GestionLigue {
 					System.out.println("USERWARNING - Une erreur est survenue durant la suppression du joueur.");
 					connexion.rollback();
 				} finally {
-					// fermeture de la connexion 
+					// fermeture de la connexion
 					connexion.close();
 				}
 			} else {
@@ -661,9 +685,9 @@ public class GestionLigue {
 
 	/**
 	 * 7. creerMatch <MatchDate> <MatchHeure> <EquipeNomLocal> <EquipeNomVisiteur>
-	 * Ajouter un match, en calculant le MatchId de manière automatique. Il faut 
-	 * vérifier que les équipes existent et qu’ils sont différents, une équipe 
-	 * ne peut pas jouer contre lui-même! Il faut vérifier aussi la date et 
+	 * Ajouter un match, en calculant le MatchId de manière automatique. Il faut
+	 * vérifier que les équipes existent et qu’ils sont différents, une équipe
+	 * ne peut pas jouer contre lui-même! Il faut vérifier aussi la date et
 	 * l’heure. Le terrain doit être assigné à celui de l’équipe locale.
 	 * @throws SQLException Exception SQL
 	 */
@@ -730,20 +754,19 @@ public class GestionLigue {
 			System.out.println("Le match a été créé avec succès.");
 
 		} catch (SQLException e) {
-			System.out.println(preparedStatement);
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la création du match.");
 			connexion.rollback();
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
 
 	/**
 	 * 8. creerArbitre <ArbitreNom> <ArbitrePrenom>
-	 * Créer un nouvel arbitre en calculant de manière automatique l’ArbitreId. 
-	 * Assurez-vous de ne pas répéter les noms des arbitres, on suppose que dans 
+	 * Créer un nouvel arbitre en calculant de manière automatique l’ArbitreId.
+	 * Assurez-vous de ne pas répéter les noms des arbitres, on suppose que dans
 	 * la ligue il n’y a pas d’homonymes.
 	 * @throws SQLException Exception SQL
 	 */
@@ -792,7 +815,7 @@ public class GestionLigue {
 				System.out.println("USERWARNING - Une erreur est survenue durant la création arbitres.");
 				connexion.rollback();
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}
@@ -836,10 +859,6 @@ public class GestionLigue {
 			try {
 				preparedStatement = connexion.prepareStatement(query);
 				preparedStatement.setInt(1, arbitreId);
-
-				System.out.println(preparedStatement);
-
-
 				preparedStatement.executeUpdate();
 
 				connexion.commit();
@@ -895,7 +914,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 
@@ -906,7 +925,15 @@ public class GestionLigue {
 
 		List<TupleArbitre> arbitres = new LinkedList<>();
 
-		String query = "SELECT ArbitreId, ArbitrePrenom, ArbitreNom FROM arbitre ";
+
+
+		String query = "SELECT DISTINCT arbitre.arbitreid, arbitrenom, arbitreprenom, " +
+				"  COUNT(matchid) AS \"nbMatchs\" " +
+				"FROM arbitrer " +
+				"  INNER JOIN arbitre " +
+				"    ON arbitrer.arbitreid = arbitrer.arbitreid " +
+				"GROUP BY arbitrer.arbitreid, arbitre.arbitreid " +
+				"ORDER BY arbitreid";
 
 		try {
 			PreparedStatement preparedStatement = connexion.prepareStatement(query);
@@ -920,7 +947,8 @@ public class GestionLigue {
 					tupleArbitre = new TupleArbitre(
 							rs.getInt("ArbitreId"),
 							rs.getString("ArbitrePrenom"),
-							rs.getString("ArbitreNom")
+							rs.getString("ArbitreNom"),
+							rs.getInt("nbMatchs")
 					);
 
 					arbitres.add(tupleArbitre);
@@ -1052,9 +1080,9 @@ public class GestionLigue {
 
 
 	/**
-	 * 11.entrerResultatMatch <MatchDate> <MatchHeure> <EquipeNomLocal> 
+	 * 11.entrerResultatMatch <MatchDate> <MatchHeure> <EquipeNomLocal>
 	 * <EquipeNomVisiteur> <PointsLocal> <PointsVisiteur>
-	 * Entrer le résultat d’un match. Valider que la valeur utilisée pour les 
+	 * Entrer le résultat d’un match. Valider que la valeur utilisée pour les
 	 * points soit toujours plus grande ou égale à zéro.
 	 * @throws SQLException Exception SQL
 	 */
@@ -1193,7 +1221,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -1206,21 +1234,27 @@ public class GestionLigue {
 
 		PreparedStatement preparedStatement = null;
 
-		String query = "SELECT m.matchid, b.arbitrePrenom || ' ' || b.arbitreNom AS arbitre, "
-				+ "pointslocal, pointsvisiteur, e1.equipeNom AS equipelocal, e2.equipeNom AS equipeVisiteur, "
-				+ "matchDate, to_char(matchHeure, 'HH24:MI:SS') AS matchheure, terrainnom "
-				+ "FROM match m "
-				+ "RIGHT JOIN arbitrer a ON a.matchid = m.matchid "
-				+ "LEFT JOIN arbitre b ON a.arbitreid = b.arbitreid "
-				+ "INNER JOIN equipe e1 ON e1.equipeid = m.equipelocal "
-				+ "INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur "
-				+ "INNER JOIN terrain t ON t.terrainid = m.terrainid ";
+		String query = "SELECT m.matchid, " +
+				"pointslocal, pointsvisiteur, e1.equipeNom AS equipelocal, e2.equipeNom AS equipeVisiteur, " +
+				"matchDate, to_char(matchHeure, 'HH24:MI:SS') AS matchheure, terrainnom, " +
+				"  (SELECT string_agg(arbitrePrenom || ' ' || arbitreNom, '<br />') " +
+				"   FROM arbitre a2 " +
+				"     INNER JOIN arbitrer ar " +
+				"       ON ar.arbitreid = a2.arbitreid " +
+				"   WHERE ar.matchid = m.matchid " +
+				"  ) AS \"arbitres\" " +
+				"FROM match m " +
+				"RIGHT JOIN arbitrer a ON a.matchid = m.matchid " +
+				"LEFT JOIN arbitre b ON a.arbitreid = b.arbitreid " +
+				"INNER JOIN equipe e1 ON e1.equipeid = m.equipelocal " +
+				"INNER JOIN equipe e2 ON e2.equipeid = m.equipeVisiteur " +
+				"INNER JOIN terrain t ON t.terrainid = m.terrainid ";
 		if(aPartirDate != null){
-			query += "WHERE matchdate > ? ";
+			query += "WHERE matchdate >= ? ";
 		}
-		query += "GROUP BY m.matchid, b.arbitrePrenom, b.arbitreNom, pointslocal, pointsvisiteur, "
+		query += "GROUP BY m.matchid, pointslocal, pointsvisiteur, "
 				+ "e1.equipeNom, e2.equipeNom, terrainnom "
-				+ "ORDER BY m.matchid ";
+				+ "ORDER BY m.matchDate ";
 
 		try {
 
@@ -1229,7 +1263,6 @@ public class GestionLigue {
 				preparedStatement.setDate(1, aPartirDate);
 			}
 			ResultSet rs = preparedStatement.executeQuery();
-
 
 			if (rs.next()) {
 
@@ -1241,10 +1274,10 @@ public class GestionLigue {
 							rs.getString("equipevisiteur"),
 							(rs.getString("pointslocal") != null ? rs.getString("pointslocal") : "À venir"),
 							(rs.getString("pointsvisiteur") != null ? rs.getString("pointsvisiteur") : "À venir"),
-							rs.getString("arbitre"),
 							rs.getDate("matchDate"),
 							rs.getString("matchHeure"),
-							rs.getString("terrainnom")
+							rs.getString("terrainnom"),
+							rs.getString("arbitres")
 					);
 
 					matchs.add(tupleMatch);
@@ -1312,7 +1345,7 @@ public class GestionLigue {
 			System.out.println(e);
 			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des arbitres.");
 		} finally {
-			// fermeture de la connexion 
+			// fermeture de la connexion
 			connexion.close();
 		}
 	}
@@ -1453,7 +1486,7 @@ public class GestionLigue {
 				System.out.println(e);
 				System.out.println("USERWARNING - Une erreur est survenue durant la creation du terrain");
 			} finally {
-				// fermeture de la connexion 
+				// fermeture de la connexion
 				connexion.close();
 			}
 		}

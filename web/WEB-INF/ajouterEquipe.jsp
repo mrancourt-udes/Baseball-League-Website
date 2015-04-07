@@ -60,7 +60,7 @@
           <div class="col-xs-9">
             <div class="input-group">
               <select class="form-control" name="terrain" data-bind="disable: $root.terrains().length > 0, value: $root.terrains().length > 0 ? '' : ''">
-                <option value="" disabled="disabled" selected="selected" data-bind="selected: $root.terrains().length > 0">Choisissez</option>
+                <option value="" disabled="disabled" selected="selected" data-bind="selected: $root.terrains().length > 0">Choisissez ou ajoutez un nouveau terrain</option>
                 <%
                   if ( !terrains.isEmpty() ) {
                     ListIterator it = terrains.listIterator();

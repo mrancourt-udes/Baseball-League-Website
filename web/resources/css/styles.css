@@ -56,3 +56,14 @@
     cursor: inherit;
     display: block;
 }
+
+.tooltip > .tooltip-inner {
+    background-color: #494949;
+}
+
+.match-filter {
+    position: relative;
+    right: 250px;
+    top: 38px;
+    z-index: 1000;
+}

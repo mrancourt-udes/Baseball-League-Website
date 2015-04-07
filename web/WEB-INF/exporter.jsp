@@ -11,7 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <title>Importation XML - Système de gestion de ligue de Baseball</title>
+  <title>Exportation XML - Système de gestion de ligue de Baseball</title>
   <jsp:include page="/WEB-INF/includes/html_header.inc.jsp" />
 </head>
 <body>

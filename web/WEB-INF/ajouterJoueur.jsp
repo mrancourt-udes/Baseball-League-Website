@@ -54,7 +54,7 @@
           <label for="equipe" class="control-label col-xs-3">Équipe </label>
           <div class="col-xs-9">
             <select class="form-control required" name="equipe" id="equipe">
-              <option value="" disabled="disabled" selected="selected" >Choisissez</option>
+              <option value="" disabled="disabled" selected="selected" >Choisissez l'équipe</option>
               <%
                 GestionLigue gestionLigue = new GestionLigue();
                 List equipes = gestionLigue.getEquipes();

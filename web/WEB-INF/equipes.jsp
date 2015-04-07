@@ -44,6 +44,9 @@
       <tr>
         <th>N°</th>
         <th>Équipe</th>
+        <th>Terrain</th>
+        <th>Nombre de joueurs</th>
+        <th>Joueurs</th>
         <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
@@ -60,14 +63,19 @@
       <tr>
         <td><%= tupleEquipe.idEquipe %></td>
         <td><%= tupleEquipe.nomEquipe %></td>
+        <td><%= tupleEquipe.terrain %></td>
+        <td><%= tupleEquipe.nbJoueurs %></td>
+        <td><%= tupleEquipe.joueursStr == null ? "—" : tupleEquipe.joueursStr %></td>
         <td>
 
           <%
             // Generation du token
             String token = (hexAdapter).marshal(md.digest(Integer.toString(tupleEquipe.idEquipe).getBytes()));
-          %>
 
-          <a class="nounderline" href="javascript:;"
+            if (tupleEquipe.joueursStr == null ) {
+          %>
+          <a class="nounderline"
+             href="javascript:;"
              data-toggle="modal" data-target="#suppressionModal"
              data-suppressionitem="<%= tupleEquipe.nomEquipe %>"
              data-id="<%= tupleEquipe.idEquipe %>"
@@ -76,6 +84,20 @@
             <span class="glyphicon glyphicon-trash"></span>
             Supprimer
           </a>
+          <%
+          } else {
+          %>
+          <span class="disabled" style="color: #8a8a8a;"
+                data-toggle="tooltip" data-placement="top">
+          <span class="glyphicon glyphicon-trash"></span>
+          Supprimer
+          </span>
+
+          <%
+            }
+
+          %>
+
         </td>
       </tr>
       <%
@@ -118,16 +140,24 @@
 <script src="/resources/js/suppression.js"></script>
 
 <script>
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip({
+      html : true,
+      title : 'Impossible de supprimer l\'équipe. Veuillez vous assurer qu\'aucun joueur n\'en fait partie.'
+    })
+  })
+
   $(function () {
     $('#listeEquipes').dataTable({
       "oLanguage": {
         "sUrl": "resources/js/localization/datatable_fr.txt"
       },
       "aoColumnDefs": [
-        {"bSortable": false, "aTargets": [2]},
-        {"width": "90px", "aTargets": [2]}
+        {"bSortable": false, "aTargets": [5]},
+        {"width": "90px", "aTargets": [5]}
       ],
-      "iDisplayLength": 50,
+      "iDisplayLength": 10,
       "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
     })
 

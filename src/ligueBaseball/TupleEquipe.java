@@ -8,16 +8,23 @@ import java.util.List;
 public class TupleEquipe {
     public int idEquipe;
     public String nomEquipe;
+    public String terrain;
+    public String nbJoueurs;
     public List<TupleJoueur> joueurs;
+    public String joueursStr;
 
 
     public TupleEquipe() {
 
     }
 
-    public TupleEquipe(int idEquipe, String nomEquipe) {
+    public TupleEquipe(int idEquipe, String nomEquipe, String terrain,
+                       String nbJoueurs, String joueursStr) {
         this.idEquipe = idEquipe;
         this.nomEquipe = nomEquipe;
+        this.terrain = terrain;
+        this.nbJoueurs = nbJoueurs;
+        this.joueursStr = joueursStr;
     }
 
     public TupleEquipe(int idEquipe, String nomEquipe, List<TupleJoueur> joueurs) {

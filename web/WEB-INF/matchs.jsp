@@ -2,6 +2,9 @@
 <%@ page import="ligueBaseball.TupleMatch" %>
 <%@ page import="java.util.List" %>
 <%@ page import="ligueBaseball.GestionLigue" %>
+<%@ page import="java.sql.Date" %>
+<%@ page import="java.text.DateFormat" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%--
   Created by IntelliJ IDEA.
   User: vonziper
@@ -28,17 +31,37 @@
 
 <div class="container">
 
-  <div class="alert alert-danger" role="alert">
-    <h3>TODOs</h3>
-    <ul>
-      <li>Fixer les doublons</li>
-      <li>Ajouter les arbitres</li>
-    </ul>
-  </div>
-
   <div class="row">
     <%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
     <jsp:include page="/WEB-INF/messageErreur.jsp" />
+  </div>
+
+  <%
+    Date aPartirDe = null;
+    String aPartirDeStr = null;
+
+    if (session.getAttribute("aPartirDe") != null) {
+      aPartirDe = (Date) session.getAttribute("aPartirDe");
+      aPartirDeStr = new SimpleDateFormat("dd-MM-yyyy").format(aPartirDe).toString();
+      session.removeAttribute("aPartirDe");
+    }
+  %>
+
+  <div class="row">
+    <form class="navbar-form navbar-right match-filter" role="form" action="FormHandler" method="post">
+      <%
+        if (aPartirDeStr != null) {
+      %>
+      <a href="Routes?page=matchs" class="btn btn-default glyphicon glyphicon-ban-circle"></a>
+      <%
+        }
+      %>
+      <div class="form-group">
+        <input name="aPartirDe" id="aPartirDe" type="text" placeholder="À partir du"
+          <%= aPartirDeStr != null ? "value='"+aPartirDeStr+"'" : "" %> class="form-control required">
+      </div>
+      <button type="submit" name="filtrerMatchDate" class="btn btn-success">Filtrer</button>
+    </form>
   </div>
 
   <!-- Example row of columns -->
@@ -48,20 +71,21 @@
       <tr>
         <th>N°</th>
         <th>Local</th>
-        <th>visiteur</th>
+        <th>Visiteur</th>
         <th>Terrain</th>
         <th>Date</th>
         <th>Heure</th>
-        <th>Points Local</th>
-        <th>Points Visiteur</th>
+        <th>Score</th>
+        <th>Arbitres</th>
         <th><span class="glyphicon glyphicon-cog"></span></th>
       </tr>
       </thead>
       <tbody>
 
       <%
+
         GestionLigue gestionLigue = new GestionLigue();
-        List matchs = gestionLigue.getResultatsDate(null);
+        List matchs = gestionLigue.getResultatsDate(aPartirDe);
 
         if ( !matchs.isEmpty() ) {
 
@@ -77,8 +101,8 @@
         <td><%= tupleMatch.terrain %></td>
         <td><%= tupleMatch.date %></td>
         <td><%= tupleMatch.heure %></td>
-        <td><%= tupleMatch.pointsLocal %></td>
-        <td><%= tupleMatch.pointsVisiteur %></td>
+        <td><%= tupleMatch.pointsLocal %> - <%= tupleMatch.pointsVisiteur %></td>
+        <td><%= tupleMatch.arbitres %></td>
         <td>
           <a class="nounderline" href="Routes?page=ajouterResultatMatch">
             <span class="glyphicon glyphicon-stats"></span>
@@ -102,6 +126,15 @@
 </div> <!-- /container -->
 
 <script>
+
+  $('#aPartirDe').datepicker({
+    todayHighlight: true,
+    weekStart: 0,
+    language : 'fr',
+    startView : 'decade',
+    format : 'dd-mm-yyyy'
+  });
+
   $(function () {
 
     $('#listeMatchs').dataTable({
@@ -111,8 +144,8 @@
       "aoColumnDefs": [
         {"bSortable": false, "aTargets": [8]},
       ],
-      "iDisplayLength": 50,
-      "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tous"]]
+      "iDisplayLength": 5,
+      "aLengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Tous"]]
     })
 
   });

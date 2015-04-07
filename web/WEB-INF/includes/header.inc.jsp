@@ -18,50 +18,49 @@
 
             <%--Equipe--%>
             <li><a href="/Routes?page=ajouterEquipe">
-              <span class="text-success">Ajouter une équipe</span>
+              <span>Ajouter une équipe</span>
             </a></li>
             <li><a href="/Routes?page=equipes">
-              <span class="text-success">Liste des équipes</span>
+              <span>Liste des équipes</span>
             </a></li>
             <li><a href="/Routes?page=equipes">
-              <span class="text-success">Supprimer une équipe</span>
+              <span>Supprimer une équipe</span>
             </a></li>
 
             <%--Joueurs--%>
             <li class="divider"></li>
             <li><a href="/Routes?page=ajouterJoueur">
-              <span class="text-success">Ajouter un joueur</span>
+              <span>Ajouter un joueur</span>
             </a></li>
             <li><a href="/Routes?page=joueurs">
-              <span class="text-success">Liste de joueurs</span>
+              <span>Liste de joueurs</span>
             </a></li>
             <li><a href="/Routes?page=joueurs">
-              <span class="text-success
-              ">Supprimer un joueur</span>
+              <span>Supprimer un joueur</span>
             </a></li>
 
             <%--Match--%>
             <li class="divider"></li>
             <li><a href="/Routes?page=ajouterMatch">
-              <span class="text-success">Ajouter un match</span>
+              <span>Ajouter un match</span>
             </a></li>
             <li><a href="/Routes?page=ajouterResultatMatch">
-              <span class="text-success">Entrer le résultat d’un match</span>
+              <span c>Entrer le résultat d’un match</span>
             </a></li>
             <li><a href="/Routes?page=matchs">
-              <span class="text-warning">Résultats des matchs</span>
+              <span>Résultats des matchs</span>
             </a></li>
 
             <%--Arbitre--%>
             <li class="divider"></li>
             <li><a href="/Routes?page=ajouterArbitre">
-              <span class="text-success">Ajouter un arbitre</span>
+              <span>Ajouter un arbitre</span>
             </a></li>
             <li><a href="/Routes?page=arbitres">
-              <span class="text-success">Liste de arbitres</span>
+              <span>Liste de arbitres</span>
             </a></li>
             <li><a href="/Routes?page=affecterArbitres">
-              <span class="text-success">Affecter des arbitres à un match</span>
+              <span>Affecter des arbitres à un match</span>
             </a></li>
 
           </ul>

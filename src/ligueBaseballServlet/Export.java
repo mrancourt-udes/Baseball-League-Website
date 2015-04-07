@@ -32,8 +32,6 @@ public class Export extends HttpServlet {
 
             String equipe;
 
-            System.out.println(request.getParameter("equipe"));
-
             if (request.getParameter("equipe") == null) {
                 throw new LigueException("Veuillez sélectionner une équipe.");
             } else {

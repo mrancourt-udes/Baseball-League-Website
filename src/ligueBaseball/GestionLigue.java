@@ -1548,8 +1548,6 @@ public class GestionLigue {
 			connexion.close();
 		}
 
-		System.out.println(equipe);
-
 		return equipe;
 	}
 

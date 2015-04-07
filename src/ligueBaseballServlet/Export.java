@@ -5,16 +5,14 @@ import ligueBaseball.LigueException;
 import ligueBaseball.LigueIO;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +24,7 @@ public class Export extends HttpServlet {
 
     // dossier contenant les fichiers xml des equipes
     private static final String UPLOAD_DIRECTORY = "XML";
+    private static final String EXT = ".xml";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -50,7 +49,6 @@ public class Export extends HttpServlet {
             }
 
             // L'export a réussi sans erreurs
-
             List listeMessageSucces = new LinkedList();
             listeMessageSucces.add("L'exportation de l'équipe a été effectuée avec succès!");
 
@@ -63,9 +61,6 @@ public class Export extends HttpServlet {
 
             // On tente de forcer le téléchargement du fichier
             forceDownload(request, response, filePath, equipe);
-
-
-            //response.sendRedirect("Routes?page=exporter");
 
         } catch (LigueException e) {
 
@@ -88,22 +83,22 @@ public class Export extends HttpServlet {
     }
 
     public void forceDownload(HttpServletRequest request, HttpServletResponse response, String pathFichier, String nomFichier) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + nomFichier + ".xml");
 
-        File file = new File(pathFichier+ "/" +nomFichier + ".xml");
-        FileInputStream fileIn = new FileInputStream(file);
-        ServletOutputStream out = response.getOutputStream();
+        response.setContentType("application/xml");
+        response.setHeader("Content-Disposition","attachment;filename="+ nomFichier + EXT);
 
-        byte[] outputByte = new byte[4096];
-        //copy binary contect to output stream
-        while(fileIn.read(outputByte, 0, 4096) != -1)
-        {
-            out.write(outputByte, 0, 4096);
+        File file = new File(pathFichier+ "/" +nomFichier + EXT);
+
+        InputStream in = new FileInputStream(file);
+        BufferedInputStream bin = new BufferedInputStream(in);
+        DataInputStream din = new DataInputStream(bin);
+        PrintWriter out = response.getWriter();
+
+        while(din.available() > 0){
+            out.print(din.readLine());
+            out.print("\n");
         }
-        fileIn.close();
-        out.flush();
-        out.close();
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

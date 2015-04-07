@@ -1,5 +1,7 @@
 package ligueBaseball;
 
+import javafx.fxml.LoadException;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -1494,17 +1496,10 @@ public class GestionLigue {
 		return terrainId;
 	}
 
-	public TupleEquipe getEquipe(String nomEquipe) throws SQLException {
+	public TupleEquipe getEquipe(String nomEquipe) throws SQLException, LigueException {
 
-		int idJoueur;
-		int numero;
-		int idEquipe = 0;
-		String nom;
-		String prenom;
-		Date dateDebut;
-		Date dateFin;
-		List<TupleJoueur> listeJoueur = null;
-
+		List<TupleJoueur> listeJoueur = new LinkedList<>();
+		TupleEquipe equipe = null;
 
 		connexion = db.getConnection();
 
@@ -1512,39 +1507,48 @@ public class GestionLigue {
 		String query = "SELECT * " +
 				"FROM faitpartie fp " +
 				"INNER JOIN equipe e ON e.equipeid = fp.equipeid " +
-				"INNER JOIN joueur j ON j.joueurid = fp.joueurid WHERE fp.equipenom = ? ";
-
-
+				"INNER JOIN joueur j ON j.joueurid = fp.joueurid " +
+				"WHERE e.equipenom = ? ";
 
 		try {
 			preparedStatement = connexion.prepareStatement(query);
-
 			preparedStatement.setString(1, nomEquipe);
-
 			ResultSet rs = preparedStatement.executeQuery();
-			idEquipe = rs.getInt("idEquipe");
-			do {
-				idJoueur = rs.getInt("idJoueur");
-				numero = rs.getInt("numero");
-				nom = rs.getString("nom");
-				prenom = rs.getString("prenom");
-				dateDebut = rs.getDate("dateDebut");
-				dateFin = rs.getDate("dateFin");
 
-				TupleJoueur joueur = new TupleJoueur(idJoueur,idEquipe,numero,nom,prenom,nomEquipe,dateDebut,dateFin);
-				listeJoueur.add(joueur);
-			} while (rs.next());
+			if (rs.next()) {
 
-			connexion.commit();
+				int equipeId = rs.getInt("equipeId");
+
+				do {
+
+					listeJoueur.add(new TupleJoueur(
+							rs.getInt("joueurid"),
+							rs.getInt("equipeId"),
+							rs.getInt("numero"),
+							rs.getString("joueurNom"),
+							rs.getString("joueurPrenom"),
+							rs.getString("equipeNom"),
+							rs.getDate("dateDebut"),
+							rs.getDate("dateFin")
+					));
+
+				} while (rs.next());
+
+				equipe = new TupleEquipe(equipeId,nomEquipe,listeJoueur);
+
+			} else {
+				throw new LigueException("Aucun joueur pour cette équipe.");
+			}
+
 		} catch (SQLException e) {
 			System.out.println(e);
-			System.out.println("USERWARNING - Une erreur est survenue durant la creation du terrain");
+			System.out.println("USERWARNING - Une erreur est survenue durant la récupération des équipes");
 		} finally {
 			// fermeture de la connexion
 			connexion.close();
 		}
 
-		TupleEquipe equipe = new TupleEquipe(idEquipe,nomEquipe,listeJoueur);
+		System.out.println(equipe);
 
 		return equipe;
 	}

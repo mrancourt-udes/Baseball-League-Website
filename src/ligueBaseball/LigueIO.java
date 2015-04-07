@@ -7,10 +7,14 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import javax.xml.transform.OutputKeys;
@@ -83,7 +87,7 @@ public class LigueIO {
 
     }
 
-    public void exporter(int equipeId) throws LigueException, SQLException {
+    public void exporter(String nomEquipe, String filePath) throws LigueException, SQLException {
         GestionLigue gestionLigue = new GestionLigue();
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
@@ -91,52 +95,45 @@ public class LigueIO {
         List<TupleJoueur> listeJoueurs;
 
         // Recuperer la liste de joueur
-        equipe = gestionLigue.getEquipe(equipeId);
+        equipe = gestionLigue.getEquipe(nomEquipe);
         listeJoueurs = equipe.joueurs;
 
         // Sauvegarder le fichier dans le dossier XML
-            try {
-                icBuilder = icFactory.newDocumentBuilder();
-                Document doc = icBuilder.newDocument();
-                Element mainRootElement = doc.createElementNS("http://crunchify.com/CrunchifyCreateXMLDOM", "Companies");
-                doc.appendChild(mainRootElement);
+        try {
+            icBuilder = icFactory.newDocumentBuilder();
+            Document doc = icBuilder.newDocument();
 
-                // append child elements to root element
-                mainRootElement.setAttribute("equipe", equipe.nomEquipe + equipe.idEquipe);
+            Element mainRootElement = doc.createElement("equipe");
+            mainRootElement.setAttribute("nom", nomEquipe);
+            doc.appendChild(mainRootElement);
 
-                TupleJoueur joueur;
-                for(int i = 0; i < listeJoueurs.size(); ++i){
-                    joueur = listeJoueurs.get(i);
-                    mainRootElement.appendChild(getNodeJoueur(doc, joueur));
-                }
+            Element joueursElement = doc.createElement("joueurs");
+            mainRootElement.appendChild(joueursElement);
 
-                // output DOM XML to console
-                Transformer transformer = TransformerFactory.newInstance().newTransformer();
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                DOMSource source = new DOMSource(doc);
-                StreamResult console = new StreamResult(System.out);
-                transformer.transform(source, console);
-
-                System.out.println("\nXML DOM Created Successfully..");
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            int nbJoueurs = listeJoueurs.size();
+            for (int i = 0; i < nbJoueurs; i++) {
+                joueursElement.appendChild(getNodeJoueur(doc, listeJoueurs.get(i)));
             }
 
-        // Forcer le download du fichier par le browser
+            // output DOM XML to console
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File(filePath + "/" + nomEquipe + ".xml"));
+            transformer.transform(source, result);
 
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private static Node getNodeJoueur(Document doc, TupleJoueur joueur) {
+    private static Node getNodeJoueur(Document doc, TupleJoueur joueur) throws ParseException {
         Element nodeJoueur = doc.createElement("joueur");
         nodeJoueur.setAttribute("nom", joueur.nom);
         nodeJoueur.setAttribute("prenom", joueur.prenom);
         nodeJoueur.setAttribute("numero", String.valueOf(joueur.numero));
-        nodeJoueur.setAttribute("datedebut", String.valueOf(joueur.dateDebut));
+                nodeJoueur.setAttribute("datedebut", new SimpleDateFormat("dd-MMM-yyyy").format(joueur.dateDebut).toString());
         return nodeJoueur;
-
     }
 
 }

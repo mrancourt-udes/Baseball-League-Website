@@ -23,29 +23,35 @@ import java.util.List;
  */
 
 public class Export extends HttpServlet {
+
+    // dossier contenant les fichiers xml des equipes
+    private static final String UPLOAD_DIRECTORY = "XML";
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
 
-            int equipeId;
+            String equipe;
 
-            if (request.getParameter("equipeId") == null) {
+            System.out.println(request.getParameter("equipe"));
+
+            if (request.getParameter("equipe") == null) {
                 throw new LigueException("Veuillez sélectionner une équipe.");
             } else {
-                equipeId = Integer.parseInt(request.getParameter("equipeId"));
+                equipe = request.getParameter("equipe");
             }
 
             LigueIO ligueIO = new LigueIO();
 
+            // recuperation du path de destination
+            String filePath = request.getSession().getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
+            filePath = filePath.replace("out/artifacts/tp4/", "");
+
             // exécuter la transaction
             synchronized (ligueIO) {
-                ligueIO.exporter(equipeId);
+                ligueIO.exporter(equipe, filePath);
             }
 
             // L'export a réussi sans erreurs
-
-            // On tente de forcer le téléchargement du fichier
-            String filePath = "A_CHANGER"; // TODO : le retourner par la fonction exporter
-            forceDownload(request, response, filePath);
 
             List listeMessageSucces = new LinkedList();
             listeMessageSucces.add("L'exportation de l'équipe a été effectuée avec succès!");
@@ -53,9 +59,15 @@ public class Export extends HttpServlet {
             request.setAttribute("listeMessageSucces", listeMessageSucces);
 
             HttpSession session = request.getSession(false);
+
             // sauvegarde du message dans la session
             session.setAttribute("listeMessageSucces", listeMessageSucces);
-            response.sendRedirect("Routes?page=exporter");
+
+            // On tente de forcer le téléchargement du fichier
+            forceDownload(request, response, filePath, equipe);
+
+
+            //response.sendRedirect("Routes?page=exporter");
 
         } catch (LigueException e) {
 
@@ -77,11 +89,11 @@ public class Export extends HttpServlet {
         }
     }
 
-    public void forceDownload(HttpServletRequest request, HttpServletResponse response, String pathFichier) throws IOException {
+    public void forceDownload(HttpServletRequest request, HttpServletResponse response, String pathFichier, String nomFichier) throws IOException {
         response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition","attachment;filename=NOM_EQUIPE.xml");
+        response.setHeader("Content-Disposition", "attachment;filename=" + nomFichier + ".xml");
 
-        File file = new File(pathFichier);
+        File file = new File(pathFichier+ "/" +nomFichier + ".xml");
         FileInputStream fileIn = new FileInputStream(file);
         ServletOutputStream out = response.getOutputStream();
 

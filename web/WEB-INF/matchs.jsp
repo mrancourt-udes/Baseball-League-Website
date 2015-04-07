@@ -29,6 +29,10 @@
   </div>
 </div>
 
+<%
+  GestionLigue gestionLigue = (GestionLigue) session.getAttribute("ligue");
+%>
+
 <div class="container">
 
   <div class="row">
@@ -83,8 +87,6 @@
       <tbody>
 
       <%
-
-        GestionLigue gestionLigue = new GestionLigue();
         List matchs = gestionLigue.getResultatsDate(aPartirDe);
 
         if ( !matchs.isEmpty() ) {

@@ -1,7 +1,5 @@
 package ligueBaseball;
 
-import javafx.fxml.LoadException;
-
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -13,11 +11,19 @@ import java.util.List;
 
 public class GestionLigue {
 
-	private Database db;
 	private Connection connexion;
+	public Database db;
 
-	public GestionLigue() throws LigueException {
-		db = Database.getInstance();
+	public GestionLigue(String serveur, String adresseIP, String bd, String user, String password)
+			throws LigueException, SQLException {
+		// allocation des objets pour le traitement des transactions
+		db = new Database(serveur, adresseIP, bd, user, password);
+	}
+
+	public void fermer() throws SQLException
+	{
+		// fermeture de la connexion
+		db.fermer();
 	}
 
 	/**
@@ -128,10 +134,7 @@ public class GestionLigue {
 		List<TupleEquipe> equipes = new LinkedList<>();
 
 		PreparedStatement preparedStatement = null;
-		/*String query =
-				"SELECT EquipeId, EquipeNom "
-						+ "FROM equipe "
-						+ "ORDER BY EquipeNom";*/
+
 		String query =
 				"SELECT e.equipeid, e.equipenom, t.terrainnom, " +
 						"  (SELECT COUNT(j.joueurid) AS \"nbJoueurs\" " +
@@ -499,7 +502,7 @@ public class GestionLigue {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des équipes.");
+			System.out.println("USERWARNING - Une erreur est survenue durant la sélection des joueurs.");
 		} finally {
 			// fermeture de la connexion
 			connexion.close();
@@ -927,15 +930,12 @@ public class GestionLigue {
 
 		List<TupleArbitre> arbitres = new LinkedList<>();
 
-
-
-		String query = "SELECT DISTINCT arbitre.arbitreid, arbitrenom, arbitreprenom, " +
-				"  COUNT(matchid) AS \"nbMatchs\" " +
-				"FROM arbitrer " +
-				"  INNER JOIN arbitre " +
-				"    ON arbitrer.arbitreid = arbitrer.arbitreid " +
-				"GROUP BY arbitrer.arbitreid, arbitre.arbitreid " +
-				"ORDER BY arbitreid";
+		String query = "SELECT a.arbitreid, a.arbitrenom, a.arbitreprenom, " +
+				"  COUNT(ar.matchid) AS nbMatchs " +
+				"FROM arbitre a " +
+				"LEFT JOIN arbitrer ar ON a.arbitreid = ar.arbitreid " +
+				"GROUP BY a.arbitreid, a.arbitrenom, a.arbitreprenom " +
+				"ORDER BY a.arbitreid";
 
 		try {
 			PreparedStatement preparedStatement = connexion.prepareStatement(query);

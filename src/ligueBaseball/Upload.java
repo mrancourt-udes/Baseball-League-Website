@@ -83,7 +83,8 @@ public class Upload extends HttpServlet {
                         // sauvegarde du fichier sur le disque
                         item.write(storeFile);
 
-                        LigueIO ligueIO = new LigueIO();
+                        GestionLigue ligue = (GestionLigue) request.getSession().getAttribute("ligue");
+                        LigueIO ligueIO = new LigueIO(ligue);
                         ligueIO.importer(filePath);
 
                         List listeMessageSucces = new LinkedList();

@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by vonziper on 2015-04-03.
@@ -16,12 +18,22 @@ public class Routes extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = request.getParameter("page");
 
         RequestDispatcher dispatcher;
+        String route;
 
-        dispatcher = request.getRequestDispatcher("/WEB-INF/"+page+".jsp");
+        if (request.getSession().getAttribute("ligue") == null) {
+            // Retour au login
+            route = "login.jsp";
+        } else if (request.getParameter("home") != null) {
+            route = "/WEB-INF/accueil.jsp";
+        } else {
+            String page = request.getParameter("page");
+            route = "/WEB-INF/" +page+".jsp";
+        }
 
+        dispatcher = request.getRequestDispatcher(route);
         dispatcher.forward(request, response);
     }
+
 }

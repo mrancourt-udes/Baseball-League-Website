@@ -24,7 +24,12 @@ import java.util.Date;
 public class FormHandler extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer etat = (Integer) request.getSession().getAttribute("etat");
+
+        checkSession(request, response);
+
+        GestionLigue ligue = (GestionLigue) request.getSession().getAttribute("ligue");
+
+        System.out.println(ligue);
 
         /*if (etat == null) {
             RequestDispatcher dispatcher = request
@@ -109,8 +114,9 @@ public class FormHandler extends HttpServlet {
                     throw new LigueException("Veuillez entrer une date de début valide");
                 }
             }
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
 
-            GestionLigue gestionLigue = new GestionLigue();
 
             // exécuter la transaction
             synchronized (gestionLigue) {
@@ -162,7 +168,8 @@ public class FormHandler extends HttpServlet {
                 nom = request.getParameter("inputNom");
             }
 
-            GestionLigue gestionLigue = new GestionLigue();
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
 
             // exécuter la transaction
             synchronized (gestionLigue) {
@@ -222,7 +229,9 @@ public class FormHandler extends HttpServlet {
                 adresse = request.getParameter("adresse");
             }
 
-            GestionLigue gestionLigue = new GestionLigue();
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
+
 
             // exécuter la transaction
             synchronized (gestionLigue) {
@@ -302,7 +311,9 @@ public class FormHandler extends HttpServlet {
                 nomEquipeVisiteur = request.getParameter("equipeVisiteur");
             }
 
-            GestionLigue gestionLigue = new GestionLigue();
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
+
 
             // exécuter la transaction
             synchronized (gestionLigue) {
@@ -400,7 +411,9 @@ public class FormHandler extends HttpServlet {
                 }
             }
 
-            GestionLigue gestionLigue = new GestionLigue();
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
+
 
             // exécuter la transaction
             synchronized (gestionLigue) {
@@ -491,7 +504,8 @@ public class FormHandler extends HttpServlet {
                 }
             }
 
-            GestionLigue gestionLigue = new GestionLigue();
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
 
             // exécuter la transaction
             synchronized (gestionLigue) {
@@ -570,6 +584,22 @@ public class FormHandler extends HttpServlet {
                     .toString());
         }
 
+    }
+
+    public void checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        if (request.getSession().getAttribute("ligue") == null) {
+
+            List listeMessageErreur = new LinkedList();
+            listeMessageErreur.add("Veuillez vous connecter pour poursuivre.");
+
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+
+            // Retour au login
+            RequestDispatcher dispatcher;
+            dispatcher = request.getRequestDispatcher("Login");
+            dispatcher.forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -25,6 +25,10 @@
   </div>
 </div>
 
+<%
+  GestionLigue gestionLigue = (GestionLigue) session.getAttribute("ligue");
+%>
+
 <div class="container">
 
   <div class="row">
@@ -43,7 +47,6 @@
             <select class="form-control required" name="equipe" id="equipe">
               <option value="" disabled="disabled" selected="selected" >Choisissez l'équipe à exporter</option>
               <%
-                GestionLigue gestionLigue = new GestionLigue();
                 List equipes = gestionLigue.getEquipes();
 
                 if ( !equipes.isEmpty() ) {

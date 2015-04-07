@@ -26,6 +26,10 @@
   </div>
 </div>
 
+<%
+  GestionLigue gestionLigue = (GestionLigue) session.getAttribute("ligue");
+%>
+
 <div class="container">
 
   <div class="row">
@@ -52,17 +56,14 @@
           </div>
         </div>
 
-        <%
-          GestionLigue gestionLigue = new GestionLigue();
-          List equipes = gestionLigue.getEquipes();
-        %>
-
         <div class="form-group">
           <label for="equipeLocale" class="control-label col-xs-3">Équipe locale </label>
           <div class="col-xs-9">
             <select class="form-control required" name="equipeLocale" id="equipeLocale">
               <option value="" disabled="disabled" selected="selected" >Choisissez l'équipe locale</option>
               <%
+                List equipes = gestionLigue.getEquipes();
+
                 if ( !equipes.isEmpty() ) {
                   ListIterator it = equipes.listIterator();
                   while (it.hasNext())

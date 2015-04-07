@@ -25,6 +25,10 @@
   </div>
 </div>
 
+<%
+  GestionLigue gestionLigue = (GestionLigue) session.getAttribute("ligue");
+%>
+
 <div class="container">
 
   <div class="row">
@@ -52,7 +56,6 @@
         </div>
 
         <%
-          GestionLigue gestionLigue = new GestionLigue();
           List equipes = gestionLigue.getEquipes();
         %>
 

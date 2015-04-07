@@ -21,38 +21,39 @@ public class Login extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        // fermer la session si elle a déjà été ouverte lors d'un appel
-        // précédent
-        // survient lorsque l'usager recharge la page login.jsp
-        if (session.getAttribute("etat") != null) {
-            // pour déboggage seulement : afficher no session et information
-            System.out
-                    .println("GestionLigue: session déja crée; id="
-                            + session.getId());
-            // la méthode invalidate appelle le listener
-            // BiblioSessionListener; cette classe est chargée lors du
-            // démarrage de
-            // l'application par le serveur (voir le fichier web.xml)
-            session.invalidate();
-            session = request.getSession();
-            System.out.println("GestionLigue: session invalidée");
-        }
-
-        // lecture des paramètres du formulaire login.jsp
-        String userIdOracle = request.getParameter("userIdBD");
-        String motDePasseOracle = request.getParameter("motDePasseBD");
-        String serveur = request.getParameter("serveur");
-        String adresseIP = request.getParameter("adresseIP");
-        String bd = request.getParameter("bd");
-
-        // ouvrir une connexion avec la BD et créer les gestionnaires
-        System.out.println("Login: session id="
-                + session.getId());
-
-        // TODO : Gerer la connexion
         try {
-            GestionLigue gestionLigue = new GestionLigue();
+            HttpSession session = request.getSession();
+            // fermer la session si elle a déjà été ouverte lors d'un appel
+            // précédent
+            // survient lorsque l'usager recharge la page login.jsp
+            if (request.getSession().getAttribute("ligue") != null) {
+                // pour déboggage seulement : afficher no session et information
+                System.out.println("GestionLigue: session déja crée; id=" + session.getId());
+
+                // la méthode invalidate appelle le listener
+                // BiblioSessionListener; cette classe est chargée lors du
+                // démarrage de
+                // l'application par le serveur (voir le fichier web.xml)
+                session.invalidate();
+                session = request.getSession();
+                System.out.println("GestionLigue: session invalidée");
+            }
+
+            // lecture des paramètres du formulaire login.jsp
+            String userIdOracle = request.getParameter("userId");
+            String motDePasseOracle = request.getParameter("password");
+            String serveur = request.getParameter("server");
+            String adresseIP = request.getParameter("adresseIp");
+            String bd = request.getParameter("database");
+
+            // ouvrir une connexion avec la BD et créer les gestionnaires
+            System.out.println("Login: session id=" + session.getId());
+            GestionLigue ligue = new GestionLigue(serveur,adresseIP,bd,
+                    userIdOracle, motDePasseOracle);
+
+            // stocker l'instance de GestionLigue au sein de la session
+            // de l'utilisateur
+            session.setAttribute("ligue", ligue);
 
             // afficher le menu membre en appelant la page selectionMembre.jsp
             // tous les JSP sont dans /WEB-INF/
@@ -72,6 +73,19 @@ public class Login extends HttpServlet {
             RequestDispatcher dispatcher = request
                     .getRequestDispatcher("Login");
             dispatcher.forward(request, response);
+        }
+        catch (SQLException e) {
+            List listeMessageErreur = new LinkedList();
+            listeMessageErreur.add(e.toString());
+
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+
+            RequestDispatcher dispatcher = request
+                    .getRequestDispatcher("Login");
+            dispatcher.forward(request, response);
+            // pour déboggage seulement : afficher tout le contenu de
+            // l'exception
+            e.printStackTrace();
         }
 
     }

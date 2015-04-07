@@ -27,6 +27,10 @@ public class Export extends HttpServlet {
     private static final String EXT = ".xml";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        // On vérifie qu'il y a bien une session de créé.
+        checkSession(request, response);
+
         try {
 
             String equipe;
@@ -37,7 +41,8 @@ public class Export extends HttpServlet {
                 equipe = request.getParameter("equipe");
             }
 
-            LigueIO ligueIO = new LigueIO();
+            GestionLigue ligue = (GestionLigue) request.getSession().getAttribute("ligue");
+            LigueIO ligueIO = new LigueIO(ligue);
 
             // recuperation du path de destination
             String filePath = request.getSession().getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
@@ -99,6 +104,22 @@ public class Export extends HttpServlet {
             out.print("\n");
         }
 
+    }
+
+    public void checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        if (request.getSession().getAttribute("ligue") == null) {
+
+            List listeMessageErreur = new LinkedList();
+            listeMessageErreur.add("Veuillez vous connecter pour poursuivre.");
+
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+
+            // Retour au login
+            RequestDispatcher dispatcher;
+            dispatcher = request.getRequestDispatcher("Login");
+            dispatcher.forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

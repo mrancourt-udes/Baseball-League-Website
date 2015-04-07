@@ -27,6 +27,8 @@ public class Suppression extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        checkSession(request, response);
+
         // Set les headers pour la reponse json
         response.setContentType("application/json");
         response.setHeader("Cache-Control", "nocache");
@@ -83,7 +85,9 @@ public class Suppression extends HttpServlet {
                 supprimerJoueurFaitPartie = true;
             }
 
-            GestionLigue gestionLigue = new GestionLigue();
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
+
 
             if (gestionLigue.supprimerJoueur(id, supprimerJoueurParticipe, supprimerJoueurFaitPartie)) {
                 jsonResponse.put("status", "success");
@@ -108,7 +112,9 @@ public class Suppression extends HttpServlet {
 
         try {
 
-            GestionLigue gestionLigue = new GestionLigue();
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
+
 
             if (gestionLigue.supprimerArbitre(id)) {
                 jsonResponse.put("status", "success");
@@ -134,8 +140,9 @@ public class Suppression extends HttpServlet {
             HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
 
-            GestionLigue gestionLigue = new GestionLigue();
-
+            GestionLigue gestionLigue = (GestionLigue) request
+                    .getSession().getAttribute("ligue");
+            
             if (gestionLigue.supprimerEquipe(id)) {
                 jsonResponse.put("status", "success");
                 jsonResponse.put("msg", "L'équipe a été supprimé avec succès!");
@@ -162,6 +169,22 @@ public class Suppression extends HttpServlet {
         jsonResponse.put("status", "error");
         jsonResponse.put("msg", "Impossible de supprimer cet élément");
 
+    }
+
+    public void checkSession(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        if (request.getSession().getAttribute("ligue") == null) {
+
+            List listeMessageErreur = new LinkedList();
+            listeMessageErreur.add("Veuillez vous connecter pour poursuivre.");
+
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+
+            // Retour au login
+            RequestDispatcher dispatcher;
+            dispatcher = request.getRequestDispatcher("Login");
+            dispatcher.forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

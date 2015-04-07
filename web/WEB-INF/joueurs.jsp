@@ -28,6 +28,10 @@
   </div>
 </div>
 
+<%
+  GestionLigue gestionLigue = (GestionLigue) session.getAttribute("ligue");
+%>
+
 <div class="container equipesWrapper">
 
   <div class="row" id="messagesContainer">
@@ -36,10 +40,6 @@
   </div>
 
   <%
-
-    // TODO : Rendre l'affichage non O(n^2)
-
-    GestionLigue gestionLigue = new GestionLigue();
     List equipes = gestionLigue.getEquipes();
     List joueurs = gestionLigue.getJoueurs();
     MessageDigest md = MessageDigest.getInstance("MD5");

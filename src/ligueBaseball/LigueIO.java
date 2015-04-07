@@ -28,9 +28,15 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class LigueIO {
 
+    private GestionLigue gestionLigue;
+
+    public LigueIO(GestionLigue ligue) {
+        gestionLigue = ligue;
+    }
+
     public void importer(String fichier) throws SQLException, LigueException {
 
-        GestionLigue gestionLigue = new GestionLigue();
+        // TODOF : fixer ça
         List joueurs = new LinkedList<>();
         String nomEquipe = null;
 
@@ -88,7 +94,7 @@ public class LigueIO {
     }
 
     public void exporter(String nomEquipe, String filePath) throws LigueException, SQLException {
-        GestionLigue gestionLigue = new GestionLigue();
+        // TODO : Fixer ça
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
         TupleEquipe equipe;

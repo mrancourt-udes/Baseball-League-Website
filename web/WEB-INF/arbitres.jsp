@@ -27,6 +27,10 @@
   </div>
 </div>
 
+<%
+  GestionLigue gestionLigue = (GestionLigue) session.getAttribute("ligue");
+%>
+
 <div class="container">
 
   <div class="row">
@@ -35,7 +39,6 @@
   </div>
 
   <%
-    GestionLigue gestionLigue = new GestionLigue();
     List joueurs = gestionLigue.getArbitres();
     MessageDigest md = MessageDigest.getInstance("MD5");
     HexBinaryAdapter hexAdapter = new HexBinaryAdapter();

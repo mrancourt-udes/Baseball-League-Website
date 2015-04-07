@@ -14,7 +14,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/Login">Système de gestion de ligue de Baseball</a>
+      <span class="navbar-brand">Système de gestion de ligue de Baseball</span>
     </div>
   </div>
 </nav>
@@ -41,37 +41,37 @@
     <!-- Example row of columns -->
     <div class="col-md-6 col-md-offset-3">
 
-      <form class="form-horizontal" action="WEB-INF/accueil.jsp">
+      <form class="form-horizontal" action="Login" method="post">
         <div class="form-group">
-          <label for="inputUserId" class="control-label col-xs-3">User Id </label>
+          <label for=userId" class="control-label col-xs-3">User Id </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputUserId" name="inputUserId" placeholder="User Id">
+            <input type="text" class="form-control required" id=userId" name="userId" value="vonziper" placeholder="User Id">
           </div>
         </div>
         <div class="form-group">
-          <label for="inputPassword" class="control-label col-xs-3">Mot de passe </label>
+          <label for=password" class="control-label col-xs-3">Mot de passe </label>
           <div class="col-xs-9">
-            <input type="password" class="form-control required" id="inputPassword" name="inputPassword" placeholder="Mot de passe">
+            <input type="password" class="form-control required" id=password" name="password" value="tp3" placeholder="Mot de passe">
           </div>
         </div>
         <div class="form-group">
-          <label for="selectServer" class="control-label col-xs-3">Serveur </label>
+          <label for="server" class="control-label col-xs-3">Serveur </label>
           <div class="col-xs-9">
-            <select class="form-control required" name="server" id="selectServer">
+            <select class="form-control required" name="server" id="server">
               <option value="postgres">Postgres</option>
             </select>
           </div>
         </div>
         <div class="form-group">
-          <label for="inputAdresseIP" class="control-label col-xs-3">Adresse IP</label>
+          <label for=adresseIp" class="control-label col-xs-3">Adresse IP</label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputAdresseIP" name="inputAdresseIP" placeholder="Adresse IP">
+            <input type="text" class="form-control required" id=adresseIp" name="adresseIp" value="127.0.0.1:5432" placeholder="Adresse IP">
           </div>
         </div>
         <div class="form-group">
-          <label for="inputDatabase" class="control-label col-xs-3">Base de données </label>
+          <label for=database" class="control-label col-xs-3">Base de données </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id="inputDatabase" name="inputDatabase" placeholder="Base de données">
+            <input type="text" class="form-control required" id=database" name="database" value="tp3" placeholder="Base de données">
           </div>
         </div>
         <div class="form-group">

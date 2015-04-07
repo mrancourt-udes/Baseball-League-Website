@@ -25,6 +25,10 @@
   </div>
 </div>
 
+<%
+  GestionLigue gestionLigue = (GestionLigue) session.getAttribute("ligue");
+%>
+
 <div class="container">
 
   <div class="row">
@@ -36,10 +40,6 @@
     <div class="col-md-6 col-md-offset-3">
       <form class="form-horizontal" action="FormHandler" method="post">
 
-        <%
-          GestionLigue gestionLigue = new GestionLigue();
-        %>
-
         <div class="form-group">
           <label for="equipe" class="control-label col-xs-3">Équipe </label>
           <div class="col-xs-9">
@@ -48,10 +48,6 @@
           </div>
         </div>
 
-
-        <%
-          List terrains = gestionLigue.getTerrains();
-        %>
         <div class="form-group">
 
           <label for="terrain" class="control-label col-xs-3">
@@ -62,6 +58,8 @@
               <select class="form-control" name="terrain" data-bind="disable: $root.terrains().length > 0, value: $root.terrains().length > 0 ? '' : ''">
                 <option value="" disabled="disabled" selected="selected" data-bind="selected: $root.terrains().length > 0">Choisissez ou ajoutez un nouveau terrain</option>
                 <%
+                  List terrains = gestionLigue.getTerrains();
+
                   if ( !terrains.isEmpty() ) {
                     ListIterator it = terrains.listIterator();
                     while (it.hasNext())

@@ -48,7 +48,7 @@
   %>
 
   <div class="row">
-    <form class="navbar-form navbar-right" role="form" action="FormHandler" method="post">
+    <form class="navbar-form navbar-right match-filter" role="form" action="FormHandler" method="post">
       <%
         if (aPartirDeStr != null) {
       %>
@@ -58,13 +58,11 @@
       %>
       <div class="form-group">
         <input name="aPartirDe" id="aPartirDe" type="text" placeholder="À partir du"
-          <%= aPartirDeStr != null ? "value='"+aPartirDeStr+"'" : "" %> class="form-control">
+          <%= aPartirDeStr != null ? "value='"+aPartirDeStr+"'" : "" %> class="form-control required">
       </div>
       <button type="submit" name="filtrerMatchDate" class="btn btn-success">Filtrer</button>
     </form>
   </div>
-
-  <div class="break margT40"></div>
 
   <!-- Example row of columns -->
   <div class="row">

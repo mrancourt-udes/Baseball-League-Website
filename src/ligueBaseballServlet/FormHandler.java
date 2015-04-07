@@ -261,12 +261,13 @@ public class FormHandler extends HttpServlet {
 
     public void traiterAjoutMatch(HttpServletRequest request,
                                   HttpServletResponse response) throws ServletException, IOException {
-        try {
 
-            java.sql.Date matchDate;
-            Timestamp matchHeure;
-            String nomEquipeLocale;
-            String nomEquipeVisiteur;
+        java.sql.Date matchDate = null;
+        Timestamp matchHeure = null;
+        String nomEquipeLocale = null;
+        String nomEquipeVisiteur = null;
+
+        try {
 
             if (request.getParameter("matchDate") == null) {
                 throw new LigueException("Veuillez entrer la date du match");

@@ -26,6 +26,10 @@
 </div>
 
 
+<%
+  System.out.println(request.getAttribute("matchDate"));
+
+%>
 
 <div class="container">
 

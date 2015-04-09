@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +28,12 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class LigueIO {
 
+
+    static final String JAXP_SCHEMA_LANGUAGE =
+            "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+    static final String W3C_XML_SCHEMA =
+            "/Users/vonziper/Dropbox/session2/ift287/travaux/tp4/tp4/XML/Rangers.xsd";
+
     private GestionLigue gestionLigue;
 
     public LigueIO(GestionLigue ligue) {
@@ -36,13 +42,21 @@ public class LigueIO {
 
     public void importer(String fichier) throws SQLException, LigueException {
 
-        // TODOF : fixer ça
         List joueurs = new LinkedList<>();
         String nomEquipe = null;
 
         Document doc = null;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
+        dbf.setNamespaceAware(true);
+        dbf.setValidating(true);
+
+        try {
+            dbf.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+        }
+        catch (IllegalArgumentException x) {
+            throw new LigueException("Error: Attribut JAXP DocumentBuilderFactory inconnu.");
+        }
 
         int nbJoueurs;
         String nom, prenom, dateDebut;
@@ -53,12 +67,13 @@ public class LigueIO {
             DocumentBuilder db = dbf.newDocumentBuilder();
             InputStream is = new FileInputStream(fichier);
             doc = db.parse(is);
+        } catch (SAXParseException e) {
+            throw new LigueException(e.toString());
         } catch (FileNotFoundException e) {
             throw new LigueException("Erreur lors du chargement du fichier : Fichier introuvale");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         NodeList listEquipe = doc.getElementsByTagName("equipe");
         if (listEquipe.getLength() > 0) {
@@ -138,7 +153,7 @@ public class LigueIO {
         nodeJoueur.setAttribute("nom", joueur.nom);
         nodeJoueur.setAttribute("prenom", joueur.prenom);
         nodeJoueur.setAttribute("numero", String.valueOf(joueur.numero));
-                nodeJoueur.setAttribute("datedebut", new SimpleDateFormat("dd-MMM-yyyy").format(joueur.dateDebut).toString());
+        nodeJoueur.setAttribute("datedebut", new SimpleDateFormat("dd-MMM-yyyy").format(joueur.dateDebut).toString());
         return nodeJoueur;
     }
 

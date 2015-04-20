@@ -55,7 +55,7 @@ public class LigueIO {
             dbf.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
         }
         catch (IllegalArgumentException x) {
-            throw new LigueException("Error: Attribut JAXP DocumentBuilderFactory inconnu.");
+            throw new LigueException("Error : Attribut JAXP DocumentBuilderFactory inconnu.");
         }
 
         int nbJoueurs;
@@ -68,7 +68,7 @@ public class LigueIO {
             InputStream is = new FileInputStream(fichier);
             doc = db.parse(is);
         } catch (SAXParseException e) {
-            throw new LigueException(e.toString());
+            throw new LigueException("Structure de fichier non valide : \n" + e.getMessage());
         } catch (FileNotFoundException e) {
             throw new LigueException("Erreur lors du chargement du fichier : Fichier introuvale");
         } catch (Exception e) {
@@ -109,7 +109,7 @@ public class LigueIO {
     }
 
     public void exporter(String nomEquipe, String filePath) throws LigueException, SQLException {
-        // TODO : Fixer ça
+
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
         TupleEquipe equipe;

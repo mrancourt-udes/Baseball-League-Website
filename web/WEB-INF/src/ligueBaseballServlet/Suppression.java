@@ -12,7 +12,6 @@ import java.util.List;
 
 import ligueBaseball.GestionLigue;
 import ligueBaseball.LigueException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**

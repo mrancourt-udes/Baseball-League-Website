@@ -45,7 +45,7 @@
         <div class="form-group">
           <label for=userId" class="control-label col-xs-3">User Id </label>
           <div class="col-xs-9">
-            <input type="text" class="form-control required" id=userId" name="userId" value="vonziper" placeholder="User Id">
+            <input type="text" class="form-control required" id=userId" name="userId" value="tp3" placeholder="User Id">
           </div>
         </div>
         <div class="form-group">

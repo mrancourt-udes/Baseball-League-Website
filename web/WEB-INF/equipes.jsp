@@ -66,7 +66,7 @@
       <tr>
         <td><%= tupleEquipe.idEquipe %></td>
         <td><%= tupleEquipe.nomEquipe %></td>
-        <td><%= tupleEquipe.terrain %></td>
+        <td><%= tupleEquipe.terrain == null ? "—" : tupleEquipe.terrain %></td>
         <td><%= tupleEquipe.nbJoueurs %></td>
         <td><%= tupleEquipe.joueursStr == null ? "—" : tupleEquipe.joueursStr %></td>
         <td>

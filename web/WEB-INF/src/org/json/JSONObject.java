@@ -451,7 +451,7 @@ public class JSONObject {
             while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
-            if (string.endsWith(".")) {
+            if (string.endsWith("")) {
                 string = string.substring(0, string.length() - 1);
             }
         }
@@ -781,7 +781,7 @@ public class JSONObject {
             while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
-            if (string.endsWith(".")) {
+            if (string.endsWith("")) {
                 string = string.substring(0, string.length() - 1);
             }
         }

@@ -66,7 +66,7 @@
         <div class="form-group">
           <div class="col-xs-offset-3 col-xs-9 text-right">
             <button type="submit" name="exporter" class="btn btn-success"
-                    onclick="setTimeout(function(){window.location.href='Routes?page=exporter'},100)">
+                    onclick="setTimeout(function(){window.location.href='Routes?page=exporter'},1500)">
               Exporter <span class="glyphicon glyphicon-export" aria-hidden="true"></span> </button>
           </div>
         </div>

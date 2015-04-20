@@ -2,7 +2,6 @@ package ligueBaseballServlet;
 import javax.servlet.http.*;
 
 import ligueBaseball.GestionLigue;
-import ligueBaseball.GestionLigue;
 
 import java.sql.*;
 

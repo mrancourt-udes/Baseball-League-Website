@@ -22,3 +22,11 @@
 <script type="text/javascript" src="resources/js/bootstrap-timepicker.min.js"></script>
 <script type="text/javascript" src="resources/js/knockout-3.3.0.js"></script>
 <script type="text/javascript" src="resources/js/toastr.min.js"></script>
+
+<script>
+  $(function() {
+    toastr.options = {
+      "positionClass": "toast-bottom-right"
+    }
+  });
+</script>

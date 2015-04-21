@@ -5,15 +5,15 @@
 
 #1. Source du projet
 
-- src : Dossier source principal
-    - ligueBaseball : Classes du TP3
-    - ligueBaseballServlet : Les Servlets
 - web : Web root
     - resources
         - css : Feuilles de styles
         - fonts : Fonts
         - js : Fichiers/Librairies javascript
     - WEB-INF : Pages jsp non public (Accessible seulement par les servlets)
+        - src : Dossier source principal
+            - ligueBaseball : Classes du TP3
+            - ligueBaseballServlet : Les Servlets
         - includes : jsp qui seront inclus dans plusieurs pages
 
 ##2. Configuration d'IntelliJ IDEA
